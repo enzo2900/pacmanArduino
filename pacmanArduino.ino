@@ -24,9 +24,9 @@
 #define TAILLE_CASE 3
 DFRobot_RGBMatrix matrix(A, B, C, D, E, CLK, LAT, OE, false, WIDTH, _HIGH);
 
+uint16_t pacmanCouleur = matrix.Color333(7,7,0);
 // 1 = Mur, 2 = bille, 0 = rien
 uint16_t couleurs[] = {matrix.Color333(0,0,0),matrix.Color333(7, 0, 0),matrix.Color333(0, 7, 0)};
-//uint16_t tabLog[WIDTH * _HIGH] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1} 
 
 // PROGMEN est ajouté pour que le tableau soit stockées dans l'espace de stockage du programmes (Mémoire Flash)
 // Sinon la mémoire RAM serait dépassé
@@ -97,6 +97,9 @@ const uint8_t map1[WIDTH][_HIGH] PROGMEM = {
 ,{1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1} //63
 };
 
+int pacmanPixelX = 3;
+int pacmanPixelY = 3;
+
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
@@ -104,9 +107,17 @@ void setup() {
   Serial.println();
   matrix.begin();
   drawMap(map1);
+  drawPacman(pacmanPixelX,pacmanPixelY);
 
 }
 
+
+// Dessine pacman sur la grille
+// Enleve les pixels de la derniere position de pacman
+void drawPacman(int lastX, int lastY,int xPos, int yPos) {
+  matrix.drawRect(lastX-1, lastY -1, 3, 3, pacmanCouleur);
+  matrix.drawRect(xPos -1, yPos -1, 3, 3, pacmanCouleur);
+}
 void drawMap(uint8_t map[WIDTH][_HIGH]) {
   Serial.println("Dessine la map");
   for(uint16_t i = 0; i < WIDTH; i++) {
