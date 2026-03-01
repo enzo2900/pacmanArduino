@@ -27,7 +27,7 @@ DFRobot_RGBMatrix matrix(A, B, C, D, E, CLK, LAT, OE, false, WIDTH, _HIGH);
 uint16_t pacmanCouleur = matrix.Color333(7,7,0);
 // 1 = Mur, 2 = bille, 0 = rien
 uint16_t couleurs[] = {matrix.Color333(0,0,0),matrix.Color333(7, 0, 0),matrix.Color333(0, 7, 0)};
-
+// Map du niveau de pacman
 // PROGMEN est ajouté pour que le tableau soit stockées dans l'espace de stockage du programmes (Mémoire Flash)
 // Sinon la mémoire RAM serait dépassé
 const uint8_t map1[WIDTH][_HIGH] PROGMEM = {
@@ -107,10 +107,30 @@ void setup() {
   Serial.println();
   matrix.begin();
   drawMap(map1);
-  drawPacman(pacmanPixelX,pacmanPixelY);
+  drawPacman(pacmanPixelX,pacmanPixelY,pacmanPixelX,pacmanPixelY);
 
 }
 
+// Est ce qu'un mur est présent au pixel demandée par rapport à la direction du regard.
+bool estMurPresent(int direction,int pixelPosX,int pixelPosY) {
+  // Regarde vers l'avant ou derriere
+  direction = abs(direction);
+  byte pixel1 ;
+  byte pixel2;
+  byte pixel3;
+  if(direction == 1) {
+      pixel1 = pgm_read_byte(&(map1[pixelPosX-1][pixelPosY]));
+      pixel2 = pgm_read_byte(&(map1[pixelPosX][pixelPosY]));
+      pixel3 = pgm_read_byte(&(map1[pixelPosX+1][pixelPosY]));
+  // Regarde vers la droite ou gauche
+  } else {
+      pixel1 = pgm_read_byte(&(map1[pixelPosX][pixelPosY-1]));
+      pixel2 = pgm_read_byte(&(map1[pixelPosX][pixelPosY]));
+      pixel3 = pgm_read_byte(&(map1[pixelPosX][pixelPosY+1]));
+  }
+
+  return pixel1 == 1 || pixel2 == 1 || pixel3 == 1;
+}
 
 // Dessine pacman sur la grille
 // Enleve les pixels de la derniere position de pacman
@@ -118,6 +138,8 @@ void drawPacman(int lastX, int lastY,int xPos, int yPos) {
   matrix.drawRect(lastX-1, lastY -1, 3, 3, pacmanCouleur);
   matrix.drawRect(xPos -1, yPos -1, 3, 3, pacmanCouleur);
 }
+
+// Dessine la map sur la grille
 void drawMap(uint8_t map[WIDTH][_HIGH]) {
   Serial.println("Dessine la map");
   for(uint16_t i = 0; i < WIDTH; i++) {
