@@ -39,7 +39,6 @@ Fantome fantomes[NOMBRE_FANTOMES] = {
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
-  printDirection(HAUT);
   Timer3.initialize(150000);
   Timer3.attachInterrupt(pacManMouv,1000000);
   
@@ -121,7 +120,26 @@ void verifierPacmanToucheObjet() {
     objet.id = 0;
     objects[indexObjet] = objet;
   }
-  
+}
+void gauche() {
+  velocityX = 0;
+  velocityY = -1;
+}
+
+void droite() {
+  velocityX = 0;
+  velocityY = 1;
+}
+
+void haut() {
+  Serial.println("Haut");
+  velocityX = 1;
+  velocityY = 0;
+}
+
+void bas() {
+  velocityX = -1;
+  velocityY = 0;
 }
 
 void recupererObjet(ObjetGrille objet) {
