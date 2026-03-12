@@ -23,6 +23,11 @@ Vecteur2D pacmanVelocity = {-1,0};
 Vecteur2D pacmanVelocityOptimist = {0,0};
 Direction directionMemorise = NONE;
 
+Fantome fantomes[NOMBRE_FANTOMES] = {
+  {29,25, 0, 1,matrix.Color333(2, 7, 0)}
+  // {29,28, 0, 1,matrix.Color333(6, 0, 0)},
+  // {29,31, 0, 1,matrix.Color333(6, 6, 0)}
+};
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
@@ -94,4 +99,6 @@ void pacManMouv(){
 
 void loop() {
 
+  delay(400);
+  updateFantomes();
 }
