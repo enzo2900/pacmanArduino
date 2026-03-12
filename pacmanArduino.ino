@@ -13,6 +13,8 @@
 #include "Vecteur2D.h"
 int pinBtnGauche = 2;
 int pinBtnDroit = 3;
+int pinBtnHaut = 18;
+int pinBtnBas = 19;
 
 Vecteur2D pacmanPos = {2,2};
 Vecteur2D pacmanVelocity = {-1,0};
@@ -20,11 +22,46 @@ Vecteur2D pacmanVelocity = {-1,0};
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
-  Serial.println();
+
+  Timer3.initialize(150000);
+  Timer3.attachInterrupt(pacManMouv,1000000);
+  
   matrix.begin();
   drawMap(map1);
   delay(100);
   drawPacman(pacmanVelocity.x, pacmanVelocity.y, pacmanPos.x, pacmanPos.y);
+
+  // gestion des boutons
+  pinMode(pinBtnGauche,INPUT_PULLUP);
+  pinMode(pinBtnDroit,INPUT_PULLUP);
+  pinMode(pinBtnHaut,INPUT_PULLUP);
+  pinMode(pinBtnBas,INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(pinBtnGauche), gauche, FALLING);
+  attachInterrupt(digitalPinToInterrupt(pinBtnDroit), droite, FALLING);
+  attachInterrupt(digitalPinToInterrupt(pinBtnHaut), haut, FALLING);
+  attachInterrupt(digitalPinToInterrupt(pinBtnBas), bas, FALLING);
+
+}
+
+void gauche() {
+  velocityX = 0;
+  velocityY = -1;
+}
+
+void droite() {
+  velocityX = 0;
+  velocityY = 1;
+}
+
+void haut() {
+  Serial.println("Haut");
+  velocityX = 1;
+  velocityY = 0;
+}
+
+void bas() {
+  velocityX = -1;
+  velocityY = 0;
 }
 
 
@@ -41,6 +78,4 @@ void pacManMouv(){
 
 void loop() {
 
-  delay(100);
-  pacManMouv();
 }
