@@ -35,6 +35,10 @@ void setup() {
   delay(100);
   drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
 
+  for(int i = 0 ; i < NOMBRE_FANTOMES; i ++) {
+    Fantome fantome = fantomes[i];
+    drawFantome(fantome.posX,fantome.posY,fantome);
+  }
   // gestion des boutons
   pinMode(pinBtnGauche,INPUT_PULLUP);
   pinMode(pinBtnDroit,INPUT_PULLUP);
