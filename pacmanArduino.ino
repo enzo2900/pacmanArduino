@@ -54,7 +54,6 @@ void droite() {
 }
 
 void haut() {
-  Serial.println("Haut");
   velocityX = 1;
   velocityY = 0;
 }
