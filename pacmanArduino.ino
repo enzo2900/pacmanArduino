@@ -76,7 +76,124 @@ void bas() {
   directionMemorise = BAS;
 }
 
+// Est ce qu'un mur est présent au pixel demandée par rapport à la direction du regard.
+bool estMurPresent(int directionX,int directionY, int pixelPosX, int pixelPosY) {
+  // Regarde vers l'avant ou derriere
+  byte pixel1 = 0;
+  byte pixel2 = 0;
+  byte pixel3 = 0;
+  if (directionX == 1 || directionX == -1) {
+    pixel1 = pgm_read_byte(&(map1[pixelPosX][pixelPosY-1]));
+    pixel2 = pgm_read_byte(&(map1[pixelPosX][pixelPosY]));
+    pixel3 = pgm_read_byte(&(map1[pixelPosX ][pixelPosY+1]));
+    // Regarde vers la droite ou gauche
+  } else if(directionY == 1 || directionY == -1){
+    pixel1 = pgm_read_byte(&(map1[pixelPosX-1][pixelPosY]));
+    pixel2 = pgm_read_byte(&(map1[pixelPosX][pixelPosY]));
+    pixel3 = pgm_read_byte(&(map1[pixelPosX+1][pixelPosY]));
+  }
 
+  return pixel1 == 1 || pixel2 == 1 || pixel3 == 1;
+}
+
+// Dessine pacman sur la grille
+// Enleve les pixels de la derniere position de pacman
+void drawPacman(int lastX, int lastY, int xPos, int yPos) {
+  matrix.drawRect(lastX - 1, lastY - 1, 3, 3, couleurs[0]);
+  matrix.drawRect(xPos - 1, yPos - 1, 3, 3, matrix.Color333(7, 7, 7));
+}
+
+// Dessine un fantome sur la grille
+// Enleve les pixels de la derniere position du fantome
+void drawFantome(int lastX, int lastY, Fantome fantome) {
+  matrix.drawRect(lastX - 1, lastY - 1, 3, 3, couleurs[0]);
+  matrix.drawRect(fantome.posX - 1, fantome.posY - 1, 3, 3, fantome.couleur);
+}
+
+
+// Dessine la map sur la grille
+void drawMap(uint8_t map[WIDTH][_HIGH]) {
+  Serial.println("Dessine la map");
+  for (uint16_t i = 0; i < WIDTH; i++) {
+    for (uint16_t j = 0; j < _HIGH; j++) {
+      // Récupére l'adresse mémoire de la valeur du tableau à i, j puis lis la valeur dans la mémoire flash
+      byte mapValue = pgm_read_byte(&(map1[i][j]));
+      uint16_t couleur = couleurs[mapValue];
+      matrix.drawPixel(i, j, couleur);
+    }
+  }
+}
+// Met a jour la position des fantomes
+// Peut mettre a jour la velocity des fantomes si il touche un mur
+void updateFantomes() {
+  for(int i = 0 ; i < NOMBRE_FANTOMES ; i ++) {
+    Fantome fantome = fantomes[i];
+    int lastXPos = fantome.posX;
+    int lastYPos = fantome.posY;
+    
+    int velocityXF = fantome.velocityX;
+    int velocityYF = fantome.velocityY;
+    
+    Serial.println(fantome.posY);
+    if(!estMurPresent(velocityXF, velocityYF,fantome.posX + velocityXF *2,fantome.posY + velocityYF *2)) {
+      fantome.posX = lastXPos + fantome.velocityX;
+      fantome.posY = lastYPos + fantome.velocityY;
+      drawFantome(lastXPos,lastYPos, fantome);
+    } else {
+      fantome = randomizeFantomeVelocity(fantome);
+    }
+
+    // Mise a jour du fantome dans le tableau
+    fantomes[i] = fantome;
+  }
+}
+
+// Donne une nouvelle vélocity à un fantome de manière aléatoire
+Fantome randomizeFantomeVelocity(Fantome fantome) {
+  uint8_t choixDirection = (uint8_t)random(4);
+      Serial.println(choixDirection);
+      switch(choixDirection) {
+        case 0:
+          fantome.velocityX = 1;
+          
+          fantome.velocityY = 0;
+          break;
+        case 1:
+          fantome.velocityX = -1;
+          Serial.println("Nouveau velocity " + fantome.velocityX);
+          fantome.velocityY = 0;
+          break;
+        case 2:
+          fantome.velocityX = 0;
+          fantome.velocityY = 1;
+          break;
+        case 3:
+          fantome.velocityX =0;
+          fantome.velocityY = -1;
+          break;
+        default :
+          break;
+      }
+    return fantome;
+}
+ 
+//Doit être appelé seulement après la mise a jour du mouvement de pacman et des fantomes
+bool pacmanToucheFantome() {
+
+  for(int i = 0 ; i < NOMBRE_FANTOMES ; i ++) {
+    Fantome fantome = fantomes[i];
+    Vecteur2D positionFantome = {fantome.posX,fantome.posY};
+    Vecteur2D positionPacman = {pacmanPixelX, pacmanPixelY};
+
+    int distance = positionPacman.distance(positionFantome);
+
+    // DIstance -2 pour prendre en compte la largeur ou longueur de pacman et du fantome 
+    if(distance -2 < 0) {
+      return true;
+    }
+  }
+  return false;
+}
 // Met a jour la position de pacman par rapport à sa position
 void pacManMouv(){
   if(directionMemorise != NONE && !estMurPresent(pacmanVelocityOptimist,pacmanPos + pacmanVelocityOptimist *2)) {
@@ -100,5 +217,9 @@ void pacManMouv(){
 void loop() {
 
   delay(400);
+  pacManMouv();
   updateFantomes();
+  if(pacmanToucheFantome()) {
+    // TODO la partie est perdu ou perd une vie
+  }
 }
