@@ -61,6 +61,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(pinBtnHaut), haut, FALLING);
   attachInterrupt(digitalPinToInterrupt(pinBtnBas), bas, FALLING);
 
+  drawObjets();
 }
 
 void gauche() {
@@ -105,7 +106,36 @@ bool pacmanToucheFantome() {
   }
   return false;
 }
-// Met a jour la position de pacman par rapport à sa position
+
+void verifierPacmanToucheObjet() {
+  Vecteur2D positionPacman = {pacmanPixelX, pacmanPixelY};
+  int indexObjet = rechercheBinaireObjets(positionPacman);
+  if(indexObjet != -1) {
+    ObjetGrille objet = objects[indexObjet];
+
+    recupererObjet(objet);
+    
+    // Mise a jour du type d'objet affiché
+    objet.id = 0;
+    objects[indexObjet] = objet;
+  }
+  
+}
+
+void recupererObjet(ObjetGrille objet) {
+  switch(objet.id) {
+    // Bille
+    case ID_BILLE: 
+      Serial.println("Touche Bille");
+      break;
+    // Pouvoirs
+    case ID_POUVOIR :
+       break;
+    default :
+      break;
+  }
+
+}
 void pacManMouv(){
   if(directionMemorise != NONE && !estMurPresent(pacmanVelocityOptimist,pacmanPos + pacmanVelocityOptimist *2)) {
     pacmanVelocity = pacmanVelocityOptimist;
@@ -123,6 +153,7 @@ void pacManMouv(){
     drawPacman(lastXPos,lastYPos,pacmanPos);
   }
   
+  verifierPacmanToucheObjet();
 }
 void pacmanMeurt() {
   // TODO la partie est perdu ou perd une vie
