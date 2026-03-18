@@ -213,13 +213,16 @@ void pacManMouv(){
   }
   
 }
-
+void pacmanMeurt() {
+  // TODO la partie est perdu ou perd une vie
+  partiePerdu = true;
+}
 void loop() {
 
   delay(400);
   pacManMouv();
   updateFantomes();
   if(pacmanToucheFantome()) {
-    // TODO la partie est perdu ou perd une vie
+    pacmanMeurt();
   }
 }
