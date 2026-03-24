@@ -28,6 +28,14 @@ Fantome fantomes[NOMBRE_FANTOMES] = {
   // {29,28, 0, 1,matrix.Color333(6, 0, 0)},
   // {29,31, 0, 1,matrix.Color333(6, 6, 0)}
 };
+
+enum Direction {
+    DROITE,
+    GAUCHE,
+    HAUT,
+    BAS
+};
+Direction directions[4] = {DROITE,DROITE,DROITE,DROITE};
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
@@ -124,13 +132,65 @@ void drawMap(uint8_t map[WIDTH][_HIGH]) {
   }
 }
 
-enum Direction {
-    DROITE,
-    GAUCHE,
-    HAUT,
-    BAS,
-};
-Direction directions[4];
+
+
+
+int nombreDirectionPossible(Vecteur2D position,Direction directionPossibles[]) {
+    int indexDirection = 0;
+    // Haut toujours = 0
+    if (!estMurPresent(1,0,position.x +2,position.y)) {
+        directionPossibles[indexDirection] = HAUT;
+        indexDirection++;
+  }
+    // Droite ou gauche toujours entre 0 et indexDirection-1
+    if (!estMurPresent(0,1,position.x ,position.y + 2)) {
+        directionPossibles[indexDirection] = DROITE;
+        indexDirection++;
+    }
+    if (!estMurPresent(0,-1,position.x,position.y- 2)) {
+        directionPossibles[indexDirection] = GAUCHE;
+        indexDirection++;
+    }
+
+    // Bas toujours = indexDirection-1
+    if (!estMurPresent(-1,0,position.x -2,position.y)) {
+        directionPossibles[indexDirection] = BAS;
+        indexDirection++;
+    }
+
+    return indexDirection;
+
+}
+
+// Donne une nouvelle vélocity à un fantome de manière aléatoire
+Fantome randomizeFantomeVelocity(Fantome fantome,Direction directionPossibles[],int tailleTableauAssigne) {
+    uint8_t choixDirection =  (uint8_t)random(tailleTableauAssigne);
+    switch(directionPossibles[choixDirection]) {
+        case HAUT:
+            fantome.velocityX = 1;
+
+            fantome.velocityY = 0;
+            break;
+        case BAS:
+            fantome.velocityX = -1;
+            printf("Nouveau velocity %d\n" , fantome.velocityX);
+            //Serial.println("Nouveau velocity " + fantome.velocityX);
+            fantome.velocityY = 0;
+            break;
+        case DROITE:
+            fantome.velocityX = 0;
+            fantome.velocityY = 1;
+            break;
+        case GAUCHE:
+            fantome.velocityX =0;
+            fantome.velocityY = -1;
+            break;
+        default :
+            break;
+    }
+    return fantome;
+}
+ 
 // Met a jour la position des fantomes
 // Peut mettre a jour la velocity des fantomes si il touche un mur
 void updateFantomes() {
@@ -159,61 +219,6 @@ void updateFantomes() {
   }
 }
 
-int nombreDirectionPossible(Vecteur2D position,Direction directionPossibles[]) {
-    int indexDirection = 0;
-    // Haut toujours = 0
-    if (!estMurPresent(1,0,position.x +2,position.y)) {
-        directionPossibles[indexDirection] = HAUT;
-        indexDirection++;
-  }
-    // Droite ou gauche toujours entre 0 et indexDirection-1
-    if (!estMurPresent(0,1,position.x ,position.y + 2)) {
-        directionPossibles[indexDirection] = DROITE;
-        indexDirection++;
-    }
-    if (!estMurPresent(0,-1,position.x,position.y- 2)) {
-        directionPossibles[indexDirection] = GAUCHE;
-        indexDirection++;
-    }
-
-    // Bas toujours = indexDirection-1
-    if (!estMurPresent(-1,0,position.x -2,position.y)) {
-        directionPossibles[indexDirection] = BAS;
-        indexDirection++;
-    }
-
-    return indexDirection;
-
-}
-// Donne une nouvelle vélocity à un fantome de manière aléatoire
-Fantome randomizeFantomeVelocity(Fantome fantome,Direction directionPossibles[4],int tailleTableauAssigne) {
-    uint8_t choixDirection =  (uint8_t)random(tailleTableauAssigne);
-    switch(directionPossibles[choixDirection]) {
-        case HAUT:
-            fantome.velocityX = 1;
-
-            fantome.velocityY = 0;
-            break;
-        case BAS:
-            fantome.velocityX = -1;
-            printf("Nouveau velocity %d\n" , fantome.velocityX);
-            //Serial.println("Nouveau velocity " + fantome.velocityX);
-            fantome.velocityY = 0;
-            break;
-        case DROITE:
-            fantome.velocityX = 0;
-            fantome.velocityY = 1;
-            break;
-        case GAUCHE:
-            fantome.velocityX =0;
-            fantome.velocityY = -1;
-            break;
-        default :
-            break;
-    }
-    return fantome;
-}
- 
 //Doit être appelé seulement après la mise a jour du mouvement de pacman et des fantomes
 bool pacmanToucheFantome() {
 
