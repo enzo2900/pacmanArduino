@@ -134,13 +134,16 @@ void updateFantomes() {
     int velocityXF = fantome.velocityX;
     int velocityYF = fantome.velocityY;
     
-    Serial.println(fantome.posY);
-    if(!estMurPresent(velocityXF, velocityYF,fantome.posX + velocityXF *2,fantome.posY + velocityYF *2)) {
-      fantome.posX = lastXPos + fantome.velocityX;
-      fantome.posY = lastYPos + fantome.velocityY;
-      drawFantome(lastXPos,lastYPos, fantome);
+    int tailleDirections = nombreDirectionPossible({lastXPos,lastYPos},directions) ;
+    if (tailleDirections > 2) {
+        fantome = randomizeFantomeVelocity(fantome,directions,tailleDirections);
+        fantome.posX = lastXPos + fantome.velocityX;
+        fantome.posY = lastYPos + fantome.velocityY;
+    } else if(!estMurPresent(velocityXF, velocityYF,fantome.posX + velocityXF *2,fantome.posY + velocityYF *2)) {
+        fantome.posX = lastXPos + fantome.velocityX;
+        fantome.posY = lastYPos + fantome.velocityY;
     } else {
-      fantome = randomizeFantomeVelocity(fantome);
+        fantome = randomizeFantomeVelocity(fantome,directions,tailleDirections);
     }
 
     // Mise a jour du fantome dans le tableau
@@ -148,32 +151,58 @@ void updateFantomes() {
   }
 }
 
+int nombreDirectionPossible(Vecteur2D position,Direction directionPossibles[]) {
+    int indexDirection = 0;
+    // Haut toujours = 0
+    if (!estMurPresent(1,0,position.x +2,position.y)) {
+        directionPossibles[indexDirection] = HAUT;
+        indexDirection++;
+  }
+    // Droite ou gauche toujours entre 0 et indexDirection-1
+    if (!estMurPresent(0,1,position.x ,position.y + 2)) {
+        directionPossibles[indexDirection] = DROITE;
+        indexDirection++;
+    }
+    if (!estMurPresent(0,-1,position.x,position.y- 2)) {
+        directionPossibles[indexDirection] = GAUCHE;
+        indexDirection++;
+    }
+
+    // Bas toujours = indexDirection-1
+    if (!estMurPresent(-1,0,position.x -2,position.y)) {
+        directionPossibles[indexDirection] = BAS;
+        indexDirection++;
+    }
+
+    return indexDirection;
+
+}
 // Donne une nouvelle vélocity à un fantome de manière aléatoire
-Fantome randomizeFantomeVelocity(Fantome fantome) {
-  uint8_t choixDirection = (uint8_t)random(4);
-      Serial.println(choixDirection);
-      switch(choixDirection) {
-        case 0:
-          fantome.velocityX = 1;
-          
-          fantome.velocityY = 0;
-          break;
-        case 1:
-          fantome.velocityX = -1;
-          Serial.println("Nouveau velocity " + fantome.velocityX);
-          fantome.velocityY = 0;
-          break;
-        case 2:
-          fantome.velocityX = 0;
-          fantome.velocityY = 1;
-          break;
-        case 3:
-          fantome.velocityX =0;
-          fantome.velocityY = -1;
-          break;
+Fantome randomizeFantomeVelocity(Fantome fantome,Direction directionPossibles[4],int tailleTableauAssigne) {
+    uint8_t choixDirection =  (uint8_t)random(tailleTableauAssigne);
+    switch(directionPossibles[choixDirection]) {
+        case HAUT:
+            fantome.velocityX = 1;
+
+            fantome.velocityY = 0;
+            break;
+        case BAS:
+            fantome.velocityX = -1;
+            printf("Nouveau velocity %d\n" , fantome.velocityX);
+            //Serial.println("Nouveau velocity " + fantome.velocityX);
+            fantome.velocityY = 0;
+            break;
+        case DROITE:
+            fantome.velocityX = 0;
+            fantome.velocityY = 1;
+            break;
+        case GAUCHE:
+            fantome.velocityX =0;
+            fantome.velocityY = -1;
+            break;
         default :
-          break;
-      }
+            break;
+    }
     return fantome;
 }
  
