@@ -190,7 +190,28 @@ Fantome randomizeFantomeVelocity(Fantome fantome,Direction directionPossibles[],
     }
     return fantome;
 }
- 
+int removeFromDirection(Direction directions[],Direction direction, int tailleDirection) {
+    int nouvelleTaille = 0;
+    for (int i = 0; i < tailleDirection; i++) {
+        if (directions[i] != direction) {
+            directions[nouvelleTaille] = directions[i];
+            nouvelleTaille++;
+        }
+    }
+    return nouvelleTaille;
+}
+Direction directionFromVelocity(Vecteur2D velocity) {
+    if (velocity.x == 1 && velocity.y == 0) {
+        return HAUT;
+    } else if (velocity.x == -1 && velocity.y == 0) {
+        return BAS;
+    } else if (velocity.x == 0 && velocity.y == 1) {
+        return DROITE;
+    } else if (velocity.x == 0 && velocity.y == -1) {
+        return GAUCHE;
+    }
+    return HAUT;
+}
 // Met a jour la position des fantomes
 // Peut mettre a jour la velocity des fantomes si il touche un mur
 void updateFantomes() {
@@ -211,6 +232,10 @@ void updateFantomes() {
         fantome.posX = lastXPos + fantome.velocityX;
         fantome.posY = lastYPos + fantome.velocityY;
     } else {
+        // Suppression de la direction derriere selon la velocité
+        if (tailleDirections != 1) {
+            tailleDirections = removeFromDirection(directions,directionFromVelocity({-velocityXF,-velocityYF}),tailleDirections);
+        }
         fantome = randomizeFantomeVelocity(fantome,directions,tailleDirections);
     }
 
