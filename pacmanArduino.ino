@@ -123,6 +123,14 @@ void drawMap(uint8_t map[WIDTH][_HIGH]) {
     }
   }
 }
+
+enum Direction {
+    DROITE,
+    GAUCHE,
+    HAUT,
+    BAS,
+};
+Direction directions[4];
 // Met a jour la position des fantomes
 // Peut mettre a jour la velocity des fantomes si il touche un mur
 void updateFantomes() {
