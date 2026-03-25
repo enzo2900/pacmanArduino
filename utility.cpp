@@ -1,28 +1,33 @@
 #include "utility.h"
-#include "map1.h"
+#include "map.h"
 
+Vecteur2D getPositionFrom(Vecteur2D position,Direction direction) {
 
+    switch (direction) {
+        case HAUT:
+            return {position.x+2,position.y};
+        case BAS:
+            return {position.x -2,position.y};
+        case DROITE:
+            return {position.x,position.x +2};
+        case GAUCHE:
+            return {position.x,position.y-2};
 
-int nombreDirectionPossible(Vecteur2D position,Direction directionPossibles[]);
-// Est ce qu'un mur est présent au pixel demandée par rapport à la direction du regard.
-bool estMurPresent(int directionX,int directionY, int pixelPosX, int pixelPosY) {
-  // Regarde vers l'avant ou derriere
-  byte pixel1 = 0;
-  byte pixel2 = 0;
-  byte pixel3 = 0;
-  if (directionX == 1 || directionX == -1) {
-    pixel1 = pgm_read_byte(&(map1[pixelPosX][pixelPosY-1]));
-    pixel2 = pgm_read_byte(&(map1[pixelPosX][pixelPosY]));
-    pixel3 = pgm_read_byte(&(map1[pixelPosX ][pixelPosY+1]));
-    // Regarde vers la droite ou gauche
-  } else if(directionY == 1 || directionY == -1){
-    pixel1 = pgm_read_byte(&(map1[pixelPosX-1][pixelPosY]));
-    pixel2 = pgm_read_byte(&(map1[pixelPosX][pixelPosY]));
-    pixel3 = pgm_read_byte(&(map1[pixelPosX+1][pixelPosY]));
-  }
-
-  return pixel1 == 1 || pixel2 == 1 || pixel3 == 1;
+    }
 }
+Direction closestToTarget(Vecteur2D position, Vecteur2D target, Direction directionPossibles[], int taille) {
+    Direction bestDirection = HAUT;
+    int bestDistance = 999;
+    for (int i = 0; i < taille; i++) {
+        int dist = getPositionFrom(position,directionPossibles[i]).distance(target);
+        if (dist < bestDistance) {
+            bestDistance = dist;
+            bestDirection = directionPossibles[i];
+        }
+    }
+    return bestDirection;
+}
+int nombreDirectionPossible(Vecteur2D position,Direction directionPossibles[]);
 
 int nombreDirectionPossible(Vecteur2D position,Direction directionPossibles[]) {
     int indexDirection = 0;
