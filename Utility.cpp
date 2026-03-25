@@ -3,17 +3,7 @@
 
 Vecteur2D getPositionFrom(Vecteur2D position,Direction direction) {
 
-    switch (direction) {
-        case HAUT:
-            return {position.x+2,position.y};
-        case BAS:
-            return {position.x -2,position.y};
-        case DROITE:
-            return {position.x,position.x +2};
-        case GAUCHE:
-            return {position.x,position.y-2};
-
-    }
+    return position + getVecteurFrom(direction) *2;
 }
 Vecteur2D getVecteurFrom(Direction direction) {
      switch (direction) {
