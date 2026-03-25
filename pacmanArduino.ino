@@ -13,7 +13,6 @@
 #include "Utility.h"
 #include "Vecteur2D.h"
 #include "TimerThree.h"
-#include "Utility.h"
 #include "Direction.h"
 #include "Fantome.h"
 #define NOMBRE_FANTOMES 1
