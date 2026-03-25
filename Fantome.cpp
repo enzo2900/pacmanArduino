@@ -53,13 +53,14 @@ void Fantome::update(Vecteur2D pacmanPos){
         }
     } else if(estMurPresent(this->position.x, this->position.y,this->position.x + this->velocity.x,
         this->position.y + this->velocity.y)) {
-        // Suppression de la direction derriere selon la velocité
+        
         // If chase pacman
         bool chasePacman = true;
         if (chasePacman) {
             Direction bestDir = closestToTarget(this->position,pacmanPos, directions,nombreDirections);
             changeVelocityWithDirection(bestDir);
         } else {
+            // Suppression de la direction derriere selon la velocité
             if (nombreDirections != 1) {
                 nombreDirections = removeFromDirection(directions,directionFromVelocity(-this->position),nombreDirections);
             }
