@@ -122,24 +122,19 @@ void verifierPacmanToucheObjet() {
   }
 }
 void gauche() {
-  velocityX = 0;
-  velocityY = -1;
+  pacmanVelocity = getVecteurFrom(GAUCHE);
 }
 
 void droite() {
-  velocityX = 0;
-  velocityY = 1;
+  pacmanVelocity = getVecteurFrom(DROITE);
 }
 
 void haut() {
-  Serial.println("Haut");
-  velocityX = 1;
-  velocityY = 0;
+  pacmanVelocity = getVecteurFrom(HAUT);
 }
 
 void bas() {
-  velocityX = -1;
-  velocityY = 0;
+  pacmanVelocity = getVecteurFrom(BAS);
 }
 
 void recupererObjet(ObjetGrille objet) {
