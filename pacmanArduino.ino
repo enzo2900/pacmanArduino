@@ -16,6 +16,9 @@
 #include "Direction.h"
 #include "Fantome.h"
 #define NOMBRE_FANTOMES 1
+#define ID_BILLE 2
+#define ID_POUVOIR 3
+
 int pinBtnGauche = 2;
 int pinBtnDroit = 3;
 int pinBtnHaut = 18;
@@ -108,8 +111,7 @@ bool pacmanToucheFantome() {
 }
 
 void verifierPacmanToucheObjet() {
-  Vecteur2D positionPacman = {pacmanPixelX, pacmanPixelY};
-  int indexObjet = rechercheBinaireObjets(positionPacman);
+  int indexObjet = rechercheBinaireObjets(pacmanPos,objects);
   if(indexObjet != -1) {
     ObjetGrille objet = objects[indexObjet];
 

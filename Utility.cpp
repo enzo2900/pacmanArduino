@@ -107,3 +107,31 @@ Direction directionFromVelocity(Vecteur2D velocity) {
     }
     return HAUT;
 }
+
+
+// Recherche binaire du tableau d'objet pour trouver en temps logarithmique l'objet de la grille à la position demandée.
+// Si l'objet n'est pas trouvé un -1 est retourné. 
+int rechercheBinaireObjets(Vecteur2D target, ObjetGrille objects[]) {
+  int fin = sizeof(objects)/sizeof(*objects)-1;
+  int debut = 0;
+  while(debut <= fin) {
+    int millieu = debut +(fin - debut)/2;
+    Vecteur2D millieuPos = objects[millieu].position;
+    if(millieuPos.x < target.x) {
+      debut = millieu+1;
+    }  else if(millieuPos.x > target.x) {
+      fin = millieu -1;
+    } else {
+        if(millieuPos.y > target.y) {
+          fin = millieu -1;
+        }  else if(millieuPos.y < target.y) {
+          debut = millieu +1;
+        } else {
+          return millieu;
+        }
+    }
+
+  }
+
+  return -1;
+}

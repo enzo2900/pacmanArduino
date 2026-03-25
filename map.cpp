@@ -143,9 +143,39 @@ const uint8_t map1[64][64] PROGMEM = {
 };
 
 
-//  0 = rien, 1 = Mur, 2 = bille, 3 = pouvoir
-const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(0, 5, 0), matrix.Color333(0, 7, 0) };
 
+// un tableau d'objets avec les positions rangés de manière croissante avec en priorité le x puis le y.
+// Le but est de pouvoir retrouver une position spécifique et de faire une recherche binaire sur le tableau.
+// Les objets peuvent être des billes jaunes, des pouvoirs de pacman, des fruits, etc...
+// taille bits = 423 .
+ObjetGrille objects[141] = {
+{{2, 2}, 2},{{2, 4}, 2},{{2, 6}, 2},{{2, 8}, 2},{{2, 10}, 2},{{2, 15}, 2},{{2, 17}, 2}
+,{{2, 19}, 2},{{2, 21}, 2},{{2, 23}, 2},{{2, 25}, 2},{{2, 27}, 2},{{2, 29}, 2}
+,{{2, 31}, 2},{{2, 33}, 2},{{2, 35}, 2},{{2, 37}, 2},{{2, 39}, 2},{{2, 41}, 2}
+,{{2, 43}, 2},{{2, 45}, 2},{{4, 2}, 2},{{4, 6}, 2},{{4, 10}, 2},{{4, 15}, 2}
+,{{4, 25}, 2},{{4, 37}, 2},{{5, 12}, 2},{{5, 14}, 2},{{6, 2}, 2},{{6, 6}, 2}
+,{{6, 10}, 2},{{6, 25}, 2},{{6, 37}, 2},{{8, 2}, 2},{{8, 6}, 2},{{8, 10}, 2}
+,{{8, 25}, 2},{{8, 37}, 2},{{10, 2}, 2},{{10, 6}, 2},{{10, 29}, 2},{{10, 31}, 2}
+,{{10, 33}, 2},{{10, 35}, 2},{{10, 37}, 2},{{10, 39}, 2},{{10, 41}, 2},{{10, 43}, 2}
+,{{11, 11}, 2},{{11, 13}, 2},{{11, 15}, 2},{{11, 17}, 2},{{11, 19}, 2},{{11, 21}, 2}
+,{{11, 23}, 2},{{11, 25}, 2},{{11, 27}, 2},{{11, 61}, 2},{{12, 2}, 2},{{12, 6}, 2}
+,{{12, 29}, 2},{{12, 37}, 2},{{12, 44}, 2},{{13, 11}, 2},{{13, 20}, 2},{{13, 61}, 2}
+,{{14, 2}, 2},{{14, 6}, 2},{{14, 29}, 2},{{14, 44}, 2},{{15, 11}, 2},{{15, 20}, 2}
+,{{15, 37}, 2},{{15, 46}, 2},{{15, 48}, 2},{{15, 50}, 2},{{15, 52}, 2},{{15, 54}, 2}
+,{{15, 56}, 2},{{15, 58}, 2},{{15, 60}, 2},{{16, 2}, 2},{{16, 6}, 2},{{16, 29}, 2}
+,{{16, 44}, 2},{{17, 11}, 2},{{17, 20}, 2},{{17, 31}, 2},{{17, 33}, 2},{{17, 35}, 2}
+,{{17, 37}, 2},{{17, 39}, 2},{{18, 2}, 2},{{18, 6}, 2},{{18, 29}, 2},{{18, 41}, 2}
+,{{19, 11}, 2},{{19, 20}, 2},{{20, 2}, 2},{{20, 6}, 2},{{20, 29}, 2},{{20, 41}, 2}
+,{{21, 11}, 2},{{21, 20}, 2},{{22, 3}, 2},{{22, 5}, 2},{{22, 7}, 2},{{22, 9}, 2}
+,{{22, 29}, 2},{{22, 41}, 2},{{23, 20}, 2},{{24, 29}, 2},{{24, 41}, 2},{{25, 20}, 2}
+,{{26, 29}, 2},{{26, 41}, 2},{{27, 20}, 2},{{28, 29}, 2},{{28, 41}, 2},{{29, 20}, 2}
+,{{30, 29}, 2},{{31, 20}, 2},{{31, 31}, 2},{{31, 33}, 2},{{31, 35}, 2},{{31, 37}, 2}
+,{{31, 39}, 2},{{31, 41}, 2},{{32, 29}, 2},{{33, 20}, 2},{{33, 22}, 2},{{33, 24}, 2}
+,{{33, 26}, 2},{{34, 29}, 2},{{36, 29}, 2},{{38, 29}, 2},{{40, 29}, 2},{{41, 31}, 2}
+,{{43, 31}, 2},{{45, 31}, 2}};
+//  0 = rien, 1 = Mur, 2 = bille, 3 = pouvoir
+//  0 = rien, 1 = Mur, 2 = bille, 3 = Pouvoir
+const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(7, 0, 0), matrix.Color333(0, 7, 0) };
 const uint16_t pacmanCouleur = matrix.Color333(0, 7, 7);
 
 // Est ce qu'un mur est présent au pixel demandée par rapport à la direction du regard.
@@ -210,4 +240,17 @@ void drawMap(uint8_t map[WIDTH][_HIGH]) {
       matrix.drawPixel(i, j, couleur);
     }
   }
+}
+
+
+// Dessine tous les objets encore non récupérés par pacman
+void drawObjets() {
+  for(int i = 0 ; i < sizeof(objects)/sizeof(*objects) ; i ++) {
+    drawObjet(objects[i]);
+  }
+}
+// Dessine un objet à sa position avec sa couleur
+void drawObjet(ObjetGrille objetGrille) {
+  uint8_t couleur = couleurs[objetGrille.id];
+  matrix.drawPixel(objetGrille.position.x,objetGrille.position.y,couleur);
 }
