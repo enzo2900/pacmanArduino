@@ -41,32 +41,30 @@ void Fantome::randomizeFantomeVelocity(Direction directionPossibles[4], int tail
 
 void Fantome::update(Vecteur2D pacmanPos){
     Vecteur2D previousPos = position;
-    int tailleDirections = nombreDirectionPossible(this->position,directions) ;
-    if (tailleDirections > 2) {
+    int nombreDirections = nombreDirectionsPossible(this->position,directions) ;
+    if (nombreDirections > 2) {
         bool chasePacman = true;
         if (chasePacman) {
-            Direction bestDir = closestToTarget(this->position,pacmanPos, directions,tailleDirections);
+            Direction bestDir = closestToTarget(this->position,pacmanPos, directions,nombreDirections);
             changeVelocityWithDirection(bestDir);
         } else {
-            randomizeFantomeVelocity(directions,tailleDirections);
+            randomizeFantomeVelocity(directions,nombreDirections);
 
         }
-        this->position = this->position + this->velocity;
-
     } else if(estMurPresent(this->position.x, this->position.y,this->position.x + this->velocity.x,
         this->position.y + this->velocity.y)) {
         // Suppression de la direction derriere selon la velocité
         // If chase pacman
         bool chasePacman = true;
         if (chasePacman) {
-            Direction bestDir = closestToTarget(this->position,pacmanPos, directions,tailleDirections);
+            Direction bestDir = closestToTarget(this->position,pacmanPos, directions,nombreDirections);
             changeVelocityWithDirection(bestDir);
         } else {
-            if (tailleDirections != 1) {
-                tailleDirections = removeFromDirection(directions,directionFromVelocity(-this->position),tailleDirections);
+            if (nombreDirections != 1) {
+                nombreDirections = removeFromDirection(directions,directionFromVelocity(-this->position),nombreDirections);
             }
 
-            randomizeFantomeVelocity(directions,tailleDirections);
+            randomizeFantomeVelocity(directions,nombreDirections);
         }
     }
     this->position = this->position + this->velocity;
