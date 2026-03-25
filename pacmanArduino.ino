@@ -14,10 +14,8 @@
 int pinBtnGauche = 2;
 int pinBtnDroit = 3;
 
-int pacmanPixelX = 2;
-int pacmanPixelY = 2;
-int velocityX = -1;
-int velocityY = 0;
+Vecteur2D pacmanPos = {2,2};
+Vecteur2D pacmanVelocity = {-1,0};
 
 void setup() {
   Serial.begin(9600);
@@ -26,17 +24,17 @@ void setup() {
   matrix.begin();
   drawMap(map1);
   delay(100);
-  drawPacman(pacmanPixelX, pacmanPixelY, pacmanPixelX, pacmanPixelY);
+  drawPacman(pacmanVelocity.x, pacmanVelocity.y, pacmanPos.x, pacmanPos.y);
 }
 
 
+// Met a jour la position de pacman par rapport à sa position
 void pacManMouv(){
-  if(!estMurPresent(velocityX, velocityY,pacmanPixelX + velocityX *2,pacmanPixelY + velocityY *2)) {
-    int lastXPos = pacmanPixelX;
-    int lastYPos = pacmanPixelY;
-    pacmanPixelX += velocityX;
-    pacmanPixelY += velocityY;
-    drawPacman(lastXPos,lastYPos,pacmanPixelX,pacmanPixelY);
+  if(!estMurPresent(pacmanVelocity,pacmanPos + pacmanVelocity *2)) {
+    int lastXPos = pacmanPos.x;
+    int lastYPos = pacmanPos.x;
+    pacmanPos = pacmanPos+ pacmanVelocity;
+    drawPacman(lastXPos,lastYPos,pacmanPos);
   }
   
 }
