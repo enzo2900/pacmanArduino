@@ -31,7 +31,7 @@ void setup() {
   matrix.begin();
   drawMap(map1);
   delay(100);
-  drawPacman(pacmanVelocity.x, pacmanVelocity.y, pacmanPos.x, pacmanPos.y);
+  drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
 
   // gestion des boutons
   pinMode(pinBtnGauche,INPUT_PULLUP);
@@ -65,8 +65,9 @@ void bas() {
 // Met a jour la position de pacman par rapport à sa position
 void pacManMouv(){
   if(!estMurPresent(pacmanVelocity,pacmanPos + pacmanVelocity *2)) {
-    int lastXPos = pacmanPos.x;
-    int lastYPos = pacmanPos.x;
+    Vecteur2D copy = pacmanPos.copy();
+    int lastXPos = copy.x;
+    int lastYPos = copy.y;
     pacmanPos = pacmanPos+ pacmanVelocity;
     drawPacman(lastXPos,lastYPos,pacmanPos);
   }

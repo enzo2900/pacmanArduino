@@ -15,6 +15,9 @@ struct Vecteur2D
       // Retourne la distance max par rapport à x ou y;
       return max(abs(direction.x),abs(direction.y));
   }
+  Vecteur2D copy() {
+    return {x,y};
+  }
   Vecteur2D operator+(const Vecteur2D & velocity) const {
         return {x + velocity.x, y + velocity.y};
     }
