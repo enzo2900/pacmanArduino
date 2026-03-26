@@ -4,10 +4,11 @@
 
 #include "Fantome.h"
 #include "map.h"
-Fantome::Fantome(const Vecteur2D basePosition, const Vecteur2D baseVelocity, uint16_t couleurBase)  {
+Fantome::Fantome(const Vecteur2D basePosition, const Vecteur2D baseVelocity, uint16_t couleurBase, ComportementFantome comportement)  {
     position = basePosition;
     velocity = baseVelocity;
     couleur = couleurBase;
+    this->comportement =comportement;
     
 }
 
@@ -26,56 +27,79 @@ void Fantome::randomizeFantomeVelocity(Direction directionPossibles[4], int tail
     changeVelocityWithDirection(directionPossibles[choixDirection]);
 }
 
+void Fantome::addChemin(Vecteur2D cheminF[],int tailleChemin) {
+    for (int i = 0 ; i < tailleChemin ; i++) {
+        chemin[i] = cheminFantome[i];
+    }
+}
+void Fantome::updatePoursuit(Vecteur2D pacmanPos) {
+    if (this->indexChemin == -1 ) {
+        int tailleC = recherche(this->position,pacmanPos);
+        this->tailleChemin = tailleC;
+        addChemin(cheminFantome,tailleC);
+        indexChemin = 0;
+    }
+    if (this->indexChemin == tailleChemin) {
+       int tailleC = recherche(this->position,pacmanPos);
+        this->tailleChemin = tailleC;
+        addChemin(cheminFantome,tailleC);
+
+        indexChemin = 0;
+    }
+    Vecteur2D newPosition = chemin[this->indexChemin];
+    this->position = newPosition;
+    indexChemin ++;
+}
+void Fantome::updateAleatoire(Vecteur2D pacmanPos) {
+    int nombreDirections = nombreDirectionsPossible(this->position,this->directions) ;
+    if (nombreDirections > 2) {
+        randomizeFantomeVelocity(this->directions,nombreDirections);
+    } else if(estMurPresent(this->velocity,this->position+ (this->velocity*2))) {
+        if (nombreDirections > 1) {
+                nombreDirections = removeFromDirection(this->directions,directionFromVelocity(-this->position),nombreDirections);
+        }
+
+        randomizeFantomeVelocity(this->directions,nombreDirections);
+    }
+    this->position = (this->position + this->velocity);
+}
+
+void Fantome::updateOptimiste(Vecteur2D pacmanPos) {
+     int nombreDirections = nombreDirectionsPossible(this->position,this->directions) ;
+    if (nombreDirections > 2) {
+        if(nombreDirections > 1) {
+                nombreDirections = removeFromDirection(this->directions,lastDirection,nombreDirections);
+        }
+        Direction bestDir = closestToTarget(this->position,pacmanPos, this->directions,nombreDirections);
+       // printDirection(bestDir);
+        changeVelocityWithDirection(bestDir);
+        this->lastDirection= bestDir;
+    }else if(estMurPresent(this->velocity,this->position+ (this->velocity*2))) {
+        Direction bestDir = closestToTarget(this->position,pacmanPos, this->directions,nombreDirections);
+        //printDirection(bestDir);
+        changeVelocityWithDirection(bestDir);
+        this->lastDirection = bestDir;
+
+        
+    }
+}
 
 void Fantome::update(Vecteur2D pacmanPos){
     Vecteur2D previousPos = this->position;
-    int nombreDirections = nombreDirectionsPossible(this->position,this->directions) ;
-    Serial.println("Direction");
-    for(int i = 0 ; i < nombreDirections ; i++) {
-         printDirection(this->directions[i]);
-    }
-   
-    if (nombreDirections > 2) {
-        // Serial.println("Intersection");
-        bool chasePacman = true;
-        if (chasePacman) {
-            //Serial.println("Chase");
-            //Serial.println(pacmanPos.x);
-            if(nombreDirections > 1) {
-                nombreDirections = removeFromDirection(this->directions,lastDirection,nombreDirections);
-            }
-            Direction bestDir = closestToTarget(this->position,pacmanPos, this->directions,nombreDirections);
-            printDirection(bestDir);
-            changeVelocityWithDirection(bestDir);
-            this->lastDirection= bestDir;
-        } else {
-            randomizeFantomeVelocity(this->directions,nombreDirections);
 
-        }
-    } else if(estMurPresent(this->velocity,this->position+ (this->velocity*2))) {
-        delay(2000);
-        Serial.println("Va vers mur");
-        // If chase pacman
-        bool chasePacman = true;
-        if (chasePacman) {
-           // Serial.println("Chase");
-            Direction bestDir = closestToTarget(this->position,pacmanPos, this->directions,nombreDirections);
-            printDirection(bestDir);
-            changeVelocityWithDirection(bestDir);
-            this->lastDirection = bestDir;
-        } else {
-            Serial.println("Randomize");
-            // Suppression de la direction derriere selon la velocité
-            if (nombreDirections > 1) {
-                nombreDirections = removeFromDirection(this->directions,directionFromVelocity(-this->position),nombreDirections);
-            }
-
-            randomizeFantomeVelocity(this->directions,nombreDirections);
-        }
+    switch (this->comportement) {
+        case POURSUIT:
+            updatePoursuit(pacmanPos);
+            break;
+        case OPTIMISTE:
+            updateOptimiste(pacmanPos);
+            break;
+        case ALEATOIRE:
+            updateAleatoire(pacmanPos);
+            break;
     }
-   
-    this->position = (this->position + this->velocity).copy();
     draw(previousPos);
+    
 }
 
 

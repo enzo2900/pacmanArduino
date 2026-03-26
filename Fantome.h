@@ -7,11 +7,16 @@
 #include "Utility.h"
 #include "Vecteur2D.h"
 #include "Direction.h"
-
+#include "FantomeRechercheChemin.h"
+enum ComportementFantome {
+    ALEATOIRE,
+    POURSUIT,
+    OPTIMISTE,
+};
 class Fantome {
 
 public:
-    Fantome(Vecteur2D basePosition, Vecteur2D baseVelocity,uint16_t couleur);
+    Fantome(Vecteur2D basePosition, Vecteur2D baseVelocity,uint16_t couleur,ComportementFantome comportement);
     void update(Vecteur2D pacmanPos);
 
     Vecteur2D getPos();
@@ -24,8 +29,19 @@ public:
      uint16_t couleur;
 private:
     
+    void updatePoursuit(Vecteur2D pacmanPos);
+
+    void updateAleatoire(Vecteur2D pacmanPos);
+
+    void updateOptimiste(Vecteur2D pacmanPos);
+
+    void addChemin(Vecteur2D cheminF[],int tailleChemin);
     Direction lastDirection = NONE;
     Direction directions[4]{};
+    ComportementFantome comportement;
+    Vecteur2D chemin[VISITE_TAILLE_MAX];
+    int tailleChemin ;
+    int indexChemin = -1;
    
 
 };

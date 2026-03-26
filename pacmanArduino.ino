@@ -28,7 +28,7 @@ Direction directionMemorise = NONE;
 
 bool partiePerdu = false;
 Fantome fantomes[NOMBRE_FANTOMES] = {
-  Fantome({29,25}, {0, -1},matrix.Color333(2, 7, 0))
+  Fantome({29,25}, {0, -1},matrix.Color333(2, 7, 0),POURSUIT)
   // {29,28, 0, 1,matrix.Color333(6, 0, 0)},
   // {29,31, 0, 1,matrix.Color333(6, 6, 0)}
 };
