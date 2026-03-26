@@ -24,7 +24,7 @@ public:
      uint16_t couleur;
 private:
     
-    
+    Direction lastDirection = NONE;
     Direction directions[4]{};
    
 

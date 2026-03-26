@@ -41,9 +41,13 @@ void Fantome::update(Vecteur2D pacmanPos){
         if (chasePacman) {
             //Serial.println("Chase");
             //Serial.println(pacmanPos.x);
+            if(nombreDirections > 1) {
+                nombreDirections = removeFromDirection(this->directions,lastDirection,nombreDirections);
+            }
             Direction bestDir = closestToTarget(this->position,pacmanPos, this->directions,nombreDirections);
             printDirection(bestDir);
             changeVelocityWithDirection(bestDir);
+            this->lastDirection= bestDir;
         } else {
             randomizeFantomeVelocity(this->directions,nombreDirections);
 
@@ -58,7 +62,7 @@ void Fantome::update(Vecteur2D pacmanPos){
             Direction bestDir = closestToTarget(this->position,pacmanPos, this->directions,nombreDirections);
             printDirection(bestDir);
             changeVelocityWithDirection(bestDir);
-            
+            this->lastDirection = bestDir;
         } else {
             Serial.println("Randomize");
             // Suppression de la direction derriere selon la velocité
