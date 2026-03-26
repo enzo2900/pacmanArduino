@@ -4,6 +4,7 @@ enum Direction {
   DROITE,
   GAUCHE,
   HAUT,
-  BAS
+  BAS,
+  NONE
 };
 #endif

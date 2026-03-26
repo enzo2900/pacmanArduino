@@ -15,6 +15,8 @@ Vecteur2D getVecteurFrom(Direction direction) {
             return {0,1};
         case GAUCHE:
             return {0,-1};
+        default:
+            return {0,0};
     }
 }
 Direction closestToTarget(Vecteur2D position, Vecteur2D target, Direction directionPossibles[], int taille) {
