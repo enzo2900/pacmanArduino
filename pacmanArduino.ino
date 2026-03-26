@@ -10,7 +10,7 @@
  */
 #include <avr/pgmspace.h>// Hardware-specific library
 #include "map.h"
-#include "utility.h"
+#include "Utility.h"
 #include "Vecteur2D.h"
 #include "TimerThree.h"
 #include "Utility.h"
