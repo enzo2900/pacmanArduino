@@ -1,4 +1,4 @@
-#include "utility.h"
+#include "Utility.h"
 #include "map.h"
 
 Vecteur2D getPositionFrom(Vecteur2D position,Direction direction) {
