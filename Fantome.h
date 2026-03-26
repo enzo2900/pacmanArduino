@@ -15,7 +15,7 @@ public:
     void update(Vecteur2D pacmanPos);
 
     Vecteur2D getPos();
-    void draw() ;
+    void draw(Vecteur2D pastPos) ;
     void changeVelocityWithDirection(Direction direction);
     // Donne une nouvelle vélocity à un fantome de manière aléatoire
     void randomizeFantomeVelocity(Direction directionPossibles[4],int tailleTableauAssigne);

@@ -28,15 +28,26 @@ Direction directionMemorise = NONE;
 
 bool partiePerdu = false;
 Fantome fantomes[NOMBRE_FANTOMES] = {
-  Fantome({29,25}, {0, 1},matrix.Color333(2, 7, 0))
+  Fantome({29,25}, {0, -1},matrix.Color333(2, 7, 0))
   // {29,28, 0, 1,matrix.Color333(6, 0, 0)},
   // {29,31, 0, 1,matrix.Color333(6, 6, 0)}
 };
 
+// Met a jour la position de pacman par rapport à sa position
+void pacManMouv(){
+  if(!estMurPresent(pacmanVelocity,pacmanPos + pacmanVelocity *2)) {
+    Vecteur2D copy = pacmanPos.copy();
+    int lastXPos = copy.x;
+    int lastYPos = copy.y;
+    pacmanPos = pacmanPos+ pacmanVelocity;
+    drawPacman(lastXPos,lastYPos,pacmanPos);
+  }
+  
+}
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
-
+  printDirection(HAUT);
   Timer3.initialize(150000);
   Timer3.attachInterrupt(pacManMouv,1000000);
   
@@ -44,9 +55,12 @@ void setup() {
   drawMap(map1);
   delay(100);
   drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
-
+  Serial.println(fantomes[0].position.x);
   for(Fantome fantome : fantomes) {
-    fantome.draw();
+    Serial.println("Salut");
+    fantome.draw(fantome.position);
+    Serial.println(fantome.getPos().x);
+    //Serial.println(fantome.position.x);
   }
   // gestion des boutons
   pinMode(pinBtnGauche,INPUT_PULLUP);
@@ -83,7 +97,7 @@ void bas() {
 // Met a jour la position des fantomes
 // Peut mettre a jour la velocity des fantomes si il touche un mur
 void updateFantomes() {
-  for(Fantome fantome : fantomes) {
+  for(Fantome& fantome : fantomes) {
     fantome.update(pacmanPos);
   }
 }
@@ -127,8 +141,8 @@ void pacmanMeurt() {
 }
 void loop() {
 
-  delay(400);
-  pacManMouv();
+  delay(1000);
+  //pacManMouv();
   updateFantomes();
   if(pacmanToucheFantome()) {
     pacmanMeurt();

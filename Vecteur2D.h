@@ -13,7 +13,7 @@ struct Vecteur2D
       int8_t yDirection = autre.y - y;
       Vecteur2D direction =  {xDirection,  yDirection};
       // Retourne la distance max par rapport à x ou y;
-      return max(abs(direction.x),abs(direction.y));
+      return abs(direction.x)+abs(direction.y);
   }
   Vecteur2D copy() {
     return {x,y};
