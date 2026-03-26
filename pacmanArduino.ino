@@ -121,6 +121,7 @@ void verifierPacmanToucheObjet() {
     objects[indexObjet] = objet;
   }
 }
+
 void gauche() {
   pacmanVelocityOptimist = getVecteurFrom(GAUCHE);
   directionMemorise = GAUCHE;
@@ -139,19 +140,6 @@ void haut() {
 void bas() {
   pacmanVelocityOptimist = getVecteurFrom(BAS);
   directionMemorise = BAS;
-}
-void verifierPacmanToucheObjet() {;
-  int indexObjet = rechercheBinaireObjets(pacmanPos,objects);
-  if(indexObjet != -1) {
-    ObjetGrille objet = objects[indexObjet];
-
-    recupererObjet(objet);
-    
-    // Mise a jour du type d'objet affiché
-    objet.id = 0;
-    objects[indexObjet] = objet;
-  }
-  
 }
 
 void recupererObjet(ObjetGrille objet) {
