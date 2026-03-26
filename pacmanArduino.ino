@@ -122,19 +122,23 @@ void verifierPacmanToucheObjet() {
   }
 }
 void gauche() {
-  pacmanVelocity = getVecteurFrom(GAUCHE);
+  pacmanVelocityOptimist = getVecteurFrom(GAUCHE);
+  directionMemorise = GAUCHE;
 }
 
 void droite() {
-  pacmanVelocity = getVecteurFrom(DROITE);
+  pacmanVelocityOptimist = getVecteurFrom(DROITE);
+  directionMemorise = DROITE;
 }
 
 void haut() {
-  pacmanVelocity = getVecteurFrom(HAUT);
+  pacmanVelocityOptimist = getVecteurFrom(HAUT);
+  directionMemorise = HAUT;
 }
 
 void bas() {
-  pacmanVelocity = getVecteurFrom(BAS);
+  pacmanVelocityOptimist = getVecteurFrom(BAS);
+  directionMemorise = BAS;
 }
 
 void recupererObjet(ObjetGrille objet) {
