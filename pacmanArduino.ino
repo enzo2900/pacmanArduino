@@ -33,17 +33,6 @@ Fantome fantomes[NOMBRE_FANTOMES] = {
   // {29,31, 0, 1,matrix.Color333(6, 6, 0)}
 };
 
-// Met a jour la position de pacman par rapport à sa position
-void pacManMouv(){
-  if(!estMurPresent(pacmanVelocity,pacmanPos + pacmanVelocity *2)) {
-    Vecteur2D copy = pacmanPos.copy();
-    int lastXPos = copy.x;
-    int lastYPos = copy.y;
-    pacmanPos = pacmanPos+ pacmanVelocity;
-    drawPacman(lastXPos,lastYPos,pacmanPos);
-  }
-  
-}
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
