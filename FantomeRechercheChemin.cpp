@@ -14,51 +14,37 @@ struct Chemin {
 };
 Vecteur2D cheminFantome[VISITE_TAILLE_MAX];
 Vecteur2D caseVoisins[4] ;
-Direction directionPossibles[4];
 bool estUnMurA(Vecteur2D position,Direction direction) {
     int x = position.x;
     int y = position.y;
 
     return estMurPresent(getVecteurFrom(direction).x,getVecteurFrom(direction).y,x,y);
 }
+
+// Récupére les cases voisines à une case donnée
 int caseVoisinDisponible(Vecteur2D caseActuelle) {
     int nombresVoisins = 0;
     if (!estUnMurA(caseActuelle + getVecteurFrom(HAUT) *2,HAUT) ) {
         caseVoisins[nombresVoisins] = caseActuelle + getVecteurFrom(HAUT);
-        directionPossibles[nombresVoisins] = HAUT;
         nombresVoisins++;
     }
     if (!estUnMurA(caseActuelle + getVecteurFrom(BAS) *2,BAS) ) {
         caseVoisins[nombresVoisins] = caseActuelle + getVecteurFrom(BAS);
-        directionPossibles[nombresVoisins] = BAS;
         nombresVoisins++;
     }
     if (!estUnMurA(caseActuelle + getVecteurFrom(DROITE) *2,DROITE)) {
         caseVoisins[nombresVoisins] = caseActuelle + getVecteurFrom(DROITE);
-        directionPossibles[nombresVoisins] = DROITE;
         nombresVoisins++;
     }
     if (!estUnMurA(caseActuelle + getVecteurFrom(GAUCHE) *2,GAUCHE)) {
         caseVoisins[nombresVoisins] = caseActuelle + getVecteurFrom(GAUCHE);
-        directionPossibles[nombresVoisins] = GAUCHE;
         nombresVoisins++;
 
     }
 
     return nombresVoisins;
 }
-int addTo(Vecteur2D tab[], int tailleTab, Vecteur2D tab2[], int tailleTab2) {
-    for (int i = 0; i < tailleTab2; i++) {
-        int index = i + tailleTab;
-        if (index >= VISITE_TAILLE_MAX) {
-            return -1;
-        }
-        tab[index] = tab2[i];
-    }
-    return tailleTab + tailleTab2;
-}
 
-// Enleve l'élément à l'index
 // Si l'index est supérieur à la taille actuelle -1 est renvoyé
 int removeTo(Vecteur2D tab[],int index, int tailleTab) {
     if (index > tailleTab) {
@@ -79,6 +65,8 @@ int removetToInt(int tab[],int index, int tailleTab) {
     }
     return tailleTab-1;
 }
+
+// Renvoie l'index de la position la plus proche de la cible
 int closestPosition(Vecteur2D positions[], Vecteur2D cible, int taille) {
     int bestDistance= 999;
     int indexClosest;
@@ -92,6 +80,8 @@ int closestPosition(Vecteur2D positions[], Vecteur2D cible, int taille) {
     return indexClosest;
 }
 
+// Renvoie true si le vecteur2D à vérifier est présent dans le tableau des positions 
+// Sinon false
 bool isVisited(Vecteur2D positions[], Vecteur2D toCheck, int taillePositions) {
     for (int i = 0; i < taillePositions; i++) {
         Vecteur2D pos = positions[i];
@@ -101,6 +91,8 @@ bool isVisited(Vecteur2D positions[], Vecteur2D toCheck, int taillePositions) {
     }
     return false;
 }
+
+// Renverse le chemin
 void renverserChemin(int tailleChemin) {
     int begin = 0;
     int end = tailleChemin-1;
@@ -123,7 +115,6 @@ int recherche(Vecteur2D positionFantome, Vecteur2D cible) {
 
     Vecteur2D toVisit[VISITE_TAILLE_MAX];
     Vecteur2D visited[VISITE_TAILLE_MAX];
-    Direction directions[VISITE_TAILLE_MAX];
     int toVisitIndexParents[VISITE_TAILLE_MAX];
     int indexParents[VISITE_TAILLE_MAX];
     toVisit[tailleToVisit] = positionFantome;
