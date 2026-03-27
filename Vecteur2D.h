@@ -18,9 +18,6 @@ struct Vecteur2D
   Vecteur2D copy() {
     return {x,y};
   }
-  Vecteur2D copy() {
-    return {x,y};
-  }
   Vecteur2D operator+(const Vecteur2D & velocity) const {
         return {x + velocity.x, y + velocity.y};
     }

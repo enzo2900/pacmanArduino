@@ -122,26 +122,6 @@ void verifierPacmanToucheObjet() {
   }
 }
 
-void gauche() {
-  pacmanVelocityOptimist = getVecteurFrom(GAUCHE);
-  directionMemorise = GAUCHE;
-}
-
-void droite() {
-  pacmanVelocityOptimist = getVecteurFrom(DROITE);
-  directionMemorise = DROITE;
-}
-
-void haut() {
-  pacmanVelocityOptimist = getVecteurFrom(HAUT);
-  directionMemorise = HAUT;
-}
-
-void bas() {
-  pacmanVelocityOptimist = getVecteurFrom(BAS);
-  directionMemorise = BAS;
-}
-
 void recupererObjet(ObjetGrille objet) {
   switch(objet.id) {
     // Bille
