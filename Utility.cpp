@@ -27,9 +27,9 @@ Direction closestToTarget(Vecteur2D position, Vecteur2D target, Direction direct
     }
     return bestDirection;
 }
-int nombreDirectionPossible(Vecteur2D position,Direction directionPossibles[]);
+int nombreDirectionsPossible(Vecteur2D position,Direction directionPossibles[]);
 
-int nombreDirectionPossible(Vecteur2D position,Direction directionPossibles[]) {
+int nombreDirectionsPossible(Vecteur2D position,Direction directionPossibles[]) {
     int indexDirection = 0;
     // Haut toujours = 0
     if (!estMurPresent(1,0,position.x +2,position.y)) {
