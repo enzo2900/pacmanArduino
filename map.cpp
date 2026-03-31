@@ -203,7 +203,7 @@ void drawMap(uint8_t map[WIDTH][_HIGH]) {
 
 // Dessine tous les objets encore non récupérés par pacman
 void drawObjets() {
-  for(int i = 0 ; i < sizeof(objects)/sizeof(*objects) ; i ++) {
+  for(int i = 0 ; i < sizeof(objects)/sizeof(ObjetGrille) ; i ++) {
     drawObjet(objects[i]);
   }
 }
