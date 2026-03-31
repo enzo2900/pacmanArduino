@@ -158,9 +158,15 @@ void pacManMouv(){
 void pacmanMeurt() {
   // TODO la partie est perdu ou perd une vie
   partiePerdu = true;
+  if(partiePerdu) {
+    
+  }
 }
 void loop() {
-
+  if(pacmanMeurt){
+    
+    return;
+  }
   delay(1000);
   //pacManMouv();
   updateFantomes();
