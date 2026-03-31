@@ -19,14 +19,14 @@
 #define ID_BILLE 2
 #define ID_POUVOIR 3
 
+int nombreBillesARecuperer;
 Vecteur2D pacmanPos = {2,2};
 Vecteur2D pacmanVelocity = {-1,0};
 Vecteur2D pacmanVelocityOptimist = {0,0};
 Direction directionMemorise = NONE;
 
-bool partiePerdu = false;
-//Fantome fantome1 = Fantome({29,25}, {0, -1},matrix.Color333(2, 7, 0),POURSUIT);
-//Fantome fantome2 = Fantome({29,28}, {0, 1},matrix.Color333(6, 0, 0),OPTIMISTE);
+volatile bool partiePerdu = false;
+volatile bool partieGagne = false;
 Fantome fantomes[NOMBRE_FANTOMES] = {
   Fantome({29,25}, {0, -1},matrix.Color333(2, 7, 0),POURSUIT),
    Fantome({29,28}, {0, 1},matrix.Color333(6, 0, 0),OPTIMISTE),
@@ -62,6 +62,61 @@ void setup() {
   }
 
   drawObjets();
+
+  nombreBillesARecuperer = getNombreBilles();
+  lancerPartie();
+}
+void lancerPartie() {
+  partiePerdu = false;
+  Timer3.attachInterrupt(pacManMouv,1000000);
+  drawMap(map1);
+  delay(100);
+
+  drawObjets();
+
+  drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
+  Serial.println(fantomes[0].position.x);
+  for(Fantome fantome : fantomes) {
+    Serial.println("Salut");
+    fantome.draw(fantome.position);
+    Serial.println(fantome.getPos().x);
+    //Serial.println(fantome.position.x);
+  }
+}
+void gauche() {
+  if(partiePerdu || partieGagne){
+    lancerPartie();
+    return;
+  }
+  pacmanVelocityOptimist = getVecteurFrom(GAUCHE);
+  directionMemorise = GAUCHE;
+}
+
+void droite() {
+    if(partiePerdu || partieGagne){
+    lancerPartie();
+    return;
+  }
+  pacmanVelocityOptimist = getVecteurFrom(DROITE);
+  directionMemorise = DROITE;
+}
+
+void haut() {
+    if(partiePerdu || partieGagne){
+    lancerPartie();
+    return;
+  }
+  pacmanVelocityOptimist = getVecteurFrom(HAUT);
+  directionMemorise = HAUT;
+}
+
+void bas() {
+    if(partiePerdu || partieGagne){
+    lancerPartie();
+    return;
+  }
+  pacmanVelocityOptimist = getVecteurFrom(BAS);
+  directionMemorise = BAS;
 }
 
 // Met a jour la position des fantomes
@@ -103,12 +158,20 @@ void verifierPacmanToucheObjet() {
     objects[indexObjet] = objet;
   }
 }
+void partieGagn() {
+  partieGagne = true;
+  drawEcranVictoire();
+}
 
 void recupererObjet(ObjetGrille objet) {
   switch(objet.id) {
     // Bille
     case ID_BILLE: 
       Serial.println("Touche Bille");
+      nombreBillesARecuperer -=1;
+      if(nombreBillesARecuperer == 0) {
+        partieGagn();
+      }
       break;
     // Pouvoirs
     case ID_POUVOIR :
@@ -137,13 +200,15 @@ void pacManMouv(){
   
   verifierPacmanToucheObjet();
 }
+void partiePerd() {
+  partiePerdu = true;
+  Timer3.detachInterrupt();
+  drawEcranDefaite();
+}
 void pacmanMeurt() {
   // TODO la partie est perdu ou perd une vie
-  partiePerdu = true;
-  if(partiePerdu) {
-    
-  }
-}
+  partiePerd();
+}  
 void loop() {
 
   if (Serial1.available() > 0) {

@@ -135,7 +135,15 @@ const ObjetGrille objects[258] = {
 //  0 = rien, 1 = Mur, 2 = bille, 3 = Pouvoir
 const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(0, 7, 0), matrix.Color333(0, 7, 0) };
 const uint16_t pacmanCouleur = matrix.Color333(0, 7, 7);
-
+int getNombreBilles() {
+  int nombreBilles = 0;
+  for(auto objetGrille : objects) {
+    if(objetGrille.id == 2) {
+      nombreBilles +=1;
+    }
+  }
+  return nombreBilles;
+}
 // Est ce qu'un mur est présent au pixel demandée par rapport à la direction du regard.
 bool estMurPresent(int directionX,int directionY, int pixelPosX, int pixelPosY) {
   // Regarde vers l'avant ou derriere
@@ -211,6 +219,19 @@ void drawObjets() {
   //  delay(1000);
     drawObjet(objects[i]);
   }
+}
+// Dessine l'écran de défaite
+void drawEcranDefaite(){
+  matrix.drawRect(10,10,20,20,matrix.Color333(0,0,0));
+  matrix.setTextColor(matrix.Color333(7,0,0));
+  //Dessine texte
+  matrix.text("Partie perdu",10,10);
+}
+void drawEcranVictoire() {
+  matrix.drawRect(10,10,20,20,matrix.Color333(0,0,0));
+  matrix.setTextColor(matrix.Color333(0,0,7));
+  //Dessine texte
+  matrix.text("Partie Gagné",10,10);
 }
 // Dessine un objet à sa position avec sa couleur
 void drawObjet(ObjetGrille objetGrille) {

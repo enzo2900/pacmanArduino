@@ -16,6 +16,7 @@ extern const uint8_t map1[_HIGH][WIDTH] PROGMEM;
 extern const  uint16_t couleurs[];
 extern const ObjetGrille objects[258] ;
 
+int getNombreBilles() ;
 // Est ce qu'un mur est présent au pixel demandée par rapport à la direction du regard.
 bool estMurPresent(int directionX,int directionY, int pixelPosX, int pixelPosY) ;
 bool estMurPresent(int directionX,int directionY, Vecteur2D pos) ;
@@ -29,4 +30,6 @@ void drawPacman(int lastX, int lastY, int xPos, int yPos);
 void drawObjets() ;
 // Dessine un objet à sa position avec sa couleur
 void drawObjet(ObjetGrille objetGrille);
+void drawEcranDefaite();
+void drawEcranVictoire() ;
 #endif
