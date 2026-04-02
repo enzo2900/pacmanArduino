@@ -245,6 +245,6 @@ void drawEcranVictoire() {
 // Dessine un objet à sa position avec sa couleur
 void drawObjet(ObjetGrille objetGrille) {
   //Serial.println(objetGrille.position.x);
-  uint8_t couleur = couleurs[objetGrille.id];
+  uint8_t couleur = couleurs[objetGrille.id %10];
   matrix.drawPixel(objetGrille.position.x,objetGrille.position.y,couleur);
 }
