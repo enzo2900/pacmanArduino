@@ -132,19 +132,19 @@ void loop() {
   if (Serial1.available() > 0) {
     char command = Serial1.read();
     switch (command) {
-      case "g" :
+      case 'g' :
         pacmanVelocityOptimist = getVecteurFrom(GAUCHE);
         directionMemorise = GAUCHE;
         break;
-      case "d":
+      case 'd':
         pacmanVelocityOptimist = getVecteurFrom(DROITE);
         directionMemorise = DROITE;
         break;
-      case "h":
+      case 'h':
         pacmanVelocityOptimist = getVecteurFrom(HAUT);
         directionMemorise = HAUT;
         break;
-      case "b":
+      case 'b':
         pacmanVelocityOptimist = getVecteurFrom(BAS);
         directionMemorise = BAS;
         break;
