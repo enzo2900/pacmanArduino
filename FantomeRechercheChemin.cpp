@@ -73,7 +73,7 @@ int removetToInt(int tab[],int index, int tailleTab) {
 }
 
 // Renvoie l'index de la position la plus proche de la cible
-int closestPosition(Vecteur2D positions[], Vecteur2D cible, int taille) {
+int closestPosition(const Vecteur2D positions[], Vecteur2D cible, int taille) {
     int bestDistance= 999;
     int indexClosest;
     for (int i = 0; i < taille; i++) {
@@ -88,7 +88,7 @@ int closestPosition(Vecteur2D positions[], Vecteur2D cible, int taille) {
 
 // Renvoie true si le vecteur2D à vérifier est présent dans le tableau des positions 
 // Sinon false
-bool isVisited(Vecteur2D positions[], Vecteur2D toCheck, int taillePositions) {
+bool isVisited(const Vecteur2D positions[], Vecteur2D toCheck, int taillePositions) {
     for (int i = 0; i < taillePositions; i++) {
         Vecteur2D pos = positions[i];
         if (toCheck.x == pos.x && toCheck.y == pos.y) {

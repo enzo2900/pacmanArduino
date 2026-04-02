@@ -127,7 +127,7 @@ bool pacmanToucheFantome() {
 }
 
 void verifierPacmanToucheObjet() {
-  int indexObjet = rechercheBinaireObjets(pacmanPos,objects);
+  int indexObjet = rechercheBinaireObjets(pacmanPos,objects,getTailleTableauObjets());
   if(indexObjet != -1) {
     ObjetGrille objet = objects[indexObjet];
 

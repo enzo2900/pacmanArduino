@@ -132,6 +132,9 @@ ObjetGrille objects[258] = {
 ,{{44, 55}, 2},{{44, 57}, 2},{{44, 59}, 2},{{44, 61}, 2},{{45, 2}, 2}};
 
 
+int getTailleTableauObjets() {
+  return sizeof(objects)/sizeof(*objects);
+}
 //  0 = rien, 1 = Mur, 2 = bille, 3 = pouvoir
 //  0 = rien, 1 = Mur, 2 = bille, 3 = Pouvoir
 const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(0, 7, 0), matrix.Color333(0, 7, 0) };

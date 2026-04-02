@@ -14,5 +14,5 @@ int removeFromDirection(Direction directions[],Direction direction, int tailleDi
 int redrawObjetsAt(Vecteur2D pixel1, Vecteur2D pixel2, Vecteur2D pixel3);
 // Recherche binaire du tableau d'objet pour trouver en temps logarithmique l'objet de la grille à la position demandée.
 // Si l'objet n'est pas trouvé un -1 est retourné. 
-int rechercheBinaireObjets(Vecteur2D target, ObjetGrille objects[]);
+int rechercheBinaireObjets(Vecteur2D target,const ObjetGrille objects[], int tailleTableau);
 #endif

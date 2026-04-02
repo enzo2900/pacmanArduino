@@ -17,6 +17,7 @@ extern const  uint16_t couleurs[];
 extern ObjetGrille objects[258] ;
 
 int getNombreBilles() ;
+int getTailleTableauObjets();
 // Est ce qu'un mur est présent au pixel demandée par rapport à la direction du regard.
 bool estMurPresent(int directionX,int directionY, int pixelPosX, int pixelPosY) ;
 bool estMurPresent(int directionX,int directionY, Vecteur2D pos) ;

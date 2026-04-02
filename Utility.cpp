@@ -110,7 +110,7 @@ Direction directionFromVelocity(Vecteur2D velocity) {
     return HAUT;
 }
 int redrawObjetAt(Vecteur2D pixel) {
-    int index1 = rechercheBinaireObjets(pixel,objects);
+    int index1 = rechercheBinaireObjets(pixel,objects,getTailleTableauObjets());
     /*Serial.println("Vecteur2D");
     Serial.println(pixel.x);
     Serial.println(pixel.y);
@@ -130,8 +130,8 @@ int redrawObjetsAt(Vecteur2D pixel1, Vecteur2D pixel2, Vecteur2D pixel3) {
 
 // Recherche binaire du tableau d'objet pour trouver en temps logarithmique l'objet de la grille à la position demandée.
 // Si l'objet n'est pas trouvé un -1 est retourné. 
-int rechercheBinaireObjets(Vecteur2D target, ObjetGrille objects[]) {
-  int fin = sizeof(objects)/sizeof(*objects)-1;
+int rechercheBinaireObjets(Vecteur2D target,const ObjetGrille objects[], int tailleTableau) {
+  int fin = tailleTableau-1;
   int debut = 0;
   while(debut <= fin) {
     int millieu = debut +(fin - debut)/2;
