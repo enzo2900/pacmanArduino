@@ -41,3 +41,7 @@ void haut() {
 void bas() {
   Serial1.println("b");
 }
+
+void loop() {
+  
+}
