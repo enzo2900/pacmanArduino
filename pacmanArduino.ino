@@ -65,6 +65,14 @@ void lancerPartie() {
   }
   drawObjets();
 }
+// Reset les ids des objets par rapport à la partie décimale sauvegardée.
+void resetObjects() {
+  for(int i = 0 ; i < getTailleTableauObjets(); i++) {
+    ObjetGrille objet = objects[i];
+    objet.id =objects[i].id /10 + (objects[i].id /10) * 10;
+    objects[i] = objet; 
+  }
+}
 void gauche() {
   if(partiePerdu || partieGagne){
     lancerPartie();
@@ -134,7 +142,7 @@ void verifierPacmanToucheObjet() {
     recupererObjet(objet);
     
     // Mise a jour du type d'objet affiché
-    objet.id = 0;
+    objet.id = objet.id /10 ;
     objects[indexObjet] = objet;
   }
 }
@@ -144,7 +152,7 @@ void partieGagn() {
 }
 
 void recupererObjet(ObjetGrille objet) {
-  switch(objet.id) {
+  switch(objet.id %10) {
     // Bille
     case ID_BILLE: 
       Serial.println("Touche Bille");
