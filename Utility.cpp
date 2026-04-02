@@ -109,6 +109,23 @@ Direction directionFromVelocity(Vecteur2D velocity) {
     }
     return HAUT;
 }
+int redrawObjetAt(Vecteur2D pixel) {
+    int index1 = rechercheBinaireObjets(pixel,objects);
+    Serial.println("Vecteur2D");
+    Serial.println(pixel.x);
+    Serial.println(pixel.y);
+    Serial.println("Index");
+    Serial.println(index1);
+    if(index1 != -1) {
+        drawObjet(objects[index1]);
+    }
+}
+int redrawObjetsAt(Vecteur2D pixel1, Vecteur2D pixel2, Vecteur2D pixel3) {
+    redrawObjetAt(pixel1);
+    redrawObjetAt(pixel2);
+    redrawObjetAt(pixel3);
+}
+
 
 
 // Recherche binaire du tableau d'objet pour trouver en temps logarithmique l'objet de la grille à la position demandée.

@@ -16,7 +16,28 @@ Vecteur2D Fantome::getPos() {
     return this->position;
 }
 void Fantome::draw(Vecteur2D pastPos) {
+    
+    
     drawEntity(pastPos, this->position, this->couleur);
+    Vecteur2D pixel1;
+    Vecteur2D pixel2;
+    Vecteur2D pixel3;
+    //delay(3000);
+    Serial.println("velocité");
+    Serial.println(this->velocity.y);
+    if(this->velocity.x != 0) {
+         pixel1 = {pastPos.x  - velocity.x,pastPos.y};
+         pixel2 = {pastPos.x  - velocity.x,pastPos.y +1};
+         pixel3 = {pastPos.x  - velocity.x,pastPos.y -1};
+    }else if(this->velocity.y != 0) {
+         pixel1 = {pastPos.x  ,pastPos.y - velocity.y};
+         pixel2 = {pastPos.x -1,pastPos.y  - velocity.y };
+         pixel3 = {pastPos.x +1 ,pastPos.y  - velocity.y};
+    } 
+    Serial.println("Vecteur pixel1");
+     Serial.println(pixel1.y);
+     Serial.println(pixel1.x);
+    redrawObjetsAt(pixel1,pixel2,pixel3);
 }
 void Fantome::changeVelocityWithDirection(Direction direction) {
     this->velocity = getVecteurFrom(direction);
@@ -33,6 +54,7 @@ void Fantome::addChemin(Vecteur2D cheminF[],int tailleChemin) {
     }
 }
 void Fantome::updatePoursuit(Vecteur2D pacmanPos) {
+    Vecteur2D pastPos = this->position;
     if (this->indexChemin == -1 ) {
         int tailleC = recherche(this->position,pacmanPos);
         this->tailleChemin = tailleC;
@@ -47,6 +69,7 @@ void Fantome::updatePoursuit(Vecteur2D pacmanPos) {
         indexChemin = 0;
     }
     Vecteur2D newPosition = chemin[this->indexChemin];
+    this->velocity = newPosition - pastPos;
     this->position = newPosition;
     indexChemin ++;
 }
@@ -82,6 +105,7 @@ void Fantome::updateOptimiste(Vecteur2D pacmanPos) {
 
         
     }
+     this->position = (this->position + this->velocity);
 }
 
 void Fantome::update(Vecteur2D pacmanPos){

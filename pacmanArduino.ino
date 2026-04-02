@@ -15,7 +15,7 @@
 #include "TimerThree.h"
 #include "Direction.h"
 #include "Fantome.h"
-#define NOMBRE_FANTOMES 1
+#define NOMBRE_FANTOMES 3
 #define ID_BILLE 2
 #define ID_POUVOIR 3
 
@@ -30,31 +30,42 @@ Vecteur2D pacmanVelocityOptimist = {0,0};
 Direction directionMemorise = NONE;
 
 bool partiePerdu = false;
+//Fantome fantome1 = Fantome({29,25}, {0, -1},matrix.Color333(2, 7, 0),POURSUIT);
+//Fantome fantome2 = Fantome({29,28}, {0, 1},matrix.Color333(6, 0, 0),OPTIMISTE);
 Fantome fantomes[NOMBRE_FANTOMES] = {
-  Fantome({29,25}, {0, -1},matrix.Color333(2, 7, 0),POURSUIT)
-  // {29,28, 0, 1,matrix.Color333(6, 0, 0)},
-  // {29,31, 0, 1,matrix.Color333(6, 6, 0)}
+  Fantome({29,25}, {0, -1},matrix.Color333(2, 7, 0),POURSUIT),
+   Fantome({29,28}, {0, 1},matrix.Color333(6, 0, 0),OPTIMISTE),
+   Fantome({29,31}, {0, 1},matrix.Color333(6, 6, 0),ALEATOIRE),
 };
 
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
+  Serial1.begin(9600);
   Timer3.initialize(150000);
   Timer3.attachInterrupt(pacManMouv,1000000);
+  Serial.println(objects[0].position.x);
+ 
   
   matrix.begin();
+   for(int i = 0 ; i < 10 ; i ++) {
+    //matrix.draw
+    //matrix.drawPixel(objects[i].position.x,objects[i].position.y,matrix.Color333(7,0,0));
+  }
   drawMap(map1);
   delay(100);
   drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
-  Serial.println(fantomes[0].position.x);
-  for(Fantome fantome : fantomes) {
-    Serial.println("Salut");
-    fantome.draw(fantome.position);
-    Serial.println(fantome.getPos().x);
+  //Serial.println(fantomes[0].position.x);
+  for(Fantome& fantome : fantomes) {
+    //Serial.println("Salut");
+    //delay(500);
+    //fantome.draw(fantome.position);
+    //Serial.println(fantome.getPos().x);
     //Serial.println(fantome.position.x);
-  }
+  };
+  //delay(2000);
   // gestion des boutons
-  pinMode(pinBtnGauche,INPUT_PULLUP);
+  /*pinMode(pinBtnGauche,INPUT_PULLUP);
   pinMode(pinBtnDroit,INPUT_PULLUP);
   pinMode(pinBtnHaut,INPUT_PULLUP);
   pinMode(pinBtnBas,INPUT_PULLUP);
@@ -62,7 +73,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(pinBtnDroit), droite, FALLING);
   attachInterrupt(digitalPinToInterrupt(pinBtnHaut), haut, FALLING);
   attachInterrupt(digitalPinToInterrupt(pinBtnBas), bas, FALLING);
-
+*/
   drawObjets();
 }
 
@@ -90,7 +101,11 @@ void bas() {
 // Peut mettre a jour la velocity des fantomes si il touche un mur
 void updateFantomes() {
   for(Fantome& fantome : fantomes) {
+    //delay(1000);
+    //fantome1.update(pacmanPos);
+    //fantome2.update(pacmanPos);
     fantome.update(pacmanPos);
+    //fantomes[2].update(pacmanPos);
   }
 }
 
@@ -161,7 +176,31 @@ void pacmanMeurt() {
 }
 void loop() {
 
-  delay(1000);
+  if (Serial1.available() > 0) {
+    char command = Serial1.read();
+    switch (command) {
+      case 'gauche' :
+        pacmanVelocityOptimist = getVecteurFrom(GAUCHE);
+        directionMemorise = GAUCHE;
+        break;
+      case 'droite':
+        pacmanVelocityOptimist = getVecteurFrom(DROITE);
+        directionMemorise = DROITE;
+        break;
+      case 'haut':
+        pacmanVelocityOptimist = getVecteurFrom(HAUT);
+        directionMemorise = HAUT;
+        break;
+      case 'bas':
+        pacmanVelocityOptimist = getVecteurFrom(BAS);
+        directionMemorise = BAS;
+        break;
+      default:
+        Serial.println(command);
+    }
+  }
+
+  delay(200);
   //pacManMouv();
   updateFantomes();
   if(pacmanToucheFantome()) {

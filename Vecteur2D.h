@@ -21,6 +21,9 @@ struct Vecteur2D
   Vecteur2D operator+(const Vecteur2D & velocity) const {
         return {x + velocity.x, y + velocity.y};
     }
+    Vecteur2D operator-(const Vecteur2D & velocity) const {
+        return {x - velocity.x, y - velocity.y};
+    }
     Vecteur2D operator*(int valeur  ) const {
         return {valeur * x, valeur * y};
     }

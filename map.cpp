@@ -86,7 +86,7 @@ const uint8_t map1[64][64] PROGMEM = {
 // Le but est de pouvoir retrouver une position spécifique et de faire une recherche binaire sur le tableau.
 // Les objets peuvent être des billes jaunes, des pouvoirs de pacman, des fruits, etc...
 // taille bits = 774 
-ObjetGrille objects[258] = {
+const ObjetGrille objects[258] = {
 {{2, 2}, 2},{{2, 4}, 2},{{2, 6}, 2},{{2, 8}, 2},{{2, 10}, 2},{{2, 15}, 2},{{2, 17}, 2}
 ,{{2, 19}, 2},{{2, 21}, 2},{{2, 23}, 2},{{2, 25}, 2},{{2, 27}, 2},{{2, 29}, 2}
 ,{{2, 31}, 2},{{2, 33}, 2},{{2, 35}, 2},{{2, 37}, 2},{{2, 39}, 2},{{2, 41}, 2}
@@ -133,7 +133,7 @@ ObjetGrille objects[258] = {
 
 //  0 = rien, 1 = Mur, 2 = bille, 3 = pouvoir
 //  0 = rien, 1 = Mur, 2 = bille, 3 = Pouvoir
-const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(7, 0, 0), matrix.Color333(0, 7, 0) };
+const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(0, 7, 0), matrix.Color333(0, 7, 0) };
 const uint16_t pacmanCouleur = matrix.Color333(0, 7, 7);
 
 // Est ce qu'un mur est présent au pixel demandée par rapport à la direction du regard.
@@ -180,6 +180,7 @@ void drawPacman(int lastX, int lastY, Vecteur2D newPos) {
 // Dessine une entité (pacman ou fantome) sur la grille
 // Enleve les pixels de la derniere position du fantome
 void drawEntity(Vecteur2D lastPos, Vecteur2D newPos, uint16_t couleur) {
+  delay(100);
   drawEntity(lastPos.x,lastPos.y, newPos.x, newPos.y,couleur);
 }
 
@@ -203,12 +204,17 @@ void drawMap(uint8_t map[WIDTH][_HIGH]) {
 
 // Dessine tous les objets encore non récupérés par pacman
 void drawObjets() {
-  for(int i = 0 ; i < sizeof(objects)/sizeof(ObjetGrille) ; i ++) {
+  
+  //Serial.println(objects[0].position.x);
+  for(int i = 0 ; i < 258 ; i ++) {
+  //for(int i = 0 ; i < sizeof(objects)/sizeof(ObjetGrille) ; i ++) {
+  //  delay(1000);
     drawObjet(objects[i]);
   }
 }
 // Dessine un objet à sa position avec sa couleur
 void drawObjet(ObjetGrille objetGrille) {
+  //Serial.println(objetGrille.position.x);
   uint8_t couleur = couleurs[objetGrille.id];
-  matrix.drawPixel(objetGrille.position.x,objetGrille.position.y,couleur);
+  matrix.drawPixel(objetGrille.position.y,objetGrille.position.x,couleur);
 }

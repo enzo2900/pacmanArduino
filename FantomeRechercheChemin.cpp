@@ -7,11 +7,11 @@
 #include "map.h"
 #include "Vecteur2D.h"
 #include "Utility.h"
-struct Chemin {
+/*struct Chemin {
     int tailleChemin;
     Vecteur2D chemin[VISITE_TAILLE_MAX];
 
-};
+};*/
 Vecteur2D cheminFantome[VISITE_TAILLE_MAX];
 Vecteur2D caseVoisins[4] ;
 bool estUnMurA(Vecteur2D position,Direction direction) {
@@ -47,20 +47,26 @@ int caseVoisinDisponible(Vecteur2D caseActuelle) {
 
 // Si l'index est supérieur à la taille actuelle -1 est renvoyé
 int removeTo(Vecteur2D tab[],int index, int tailleTab) {
-    if (index > tailleTab) {
+    if (index > tailleTab || index < 0) {
         return -1;
     }
     for (int i = index; i < tailleTab-1; i++) {
+        if(i+1 > tailleTab-1) {
+            continue;
+        }
         tab[i] = tab[i+1];
     }
     return tailleTab-1;
 
 }
 int removetToInt(int tab[],int index, int tailleTab) {
-    if (index > tailleTab) {
+   if (index > tailleTab || index < 0) {
         return -1;
     }
     for (int i = index; i < tailleTab-1; i++) {
+        if(i+1 > tailleTab-1) {
+            continue;
+        }
         tab[i] = tab[i+1];
     }
     return tailleTab-1;
@@ -115,8 +121,8 @@ int recherche(Vecteur2D positionFantome, Vecteur2D cible) {
 
     Vecteur2D toVisit[VISITE_TAILLE_MAX];
     Vecteur2D visited[VISITE_TAILLE_MAX];
-    int toVisitIndexParents[VISITE_TAILLE_MAX];
-    int indexParents[VISITE_TAILLE_MAX];
+    int16_t toVisitIndexParents[VISITE_TAILLE_MAX];
+    int16_t indexParents[VISITE_TAILLE_MAX];
     toVisit[tailleToVisit] = positionFantome;
     toVisitIndexParents[tailleToVisit] = -1;
     visited[tailleVisited] = positionFantome;
@@ -159,10 +165,15 @@ int recherche(Vecteur2D positionFantome, Vecteur2D cible) {
     int currentParent = indexParents[indexBestPos];
     cheminFantome[tailleChemin] = visited[indexBestPos];
     tailleChemin++;
+    int iterations = 0;
     while (currentParent != -1) {
+        iterations ++;
         cheminFantome[tailleChemin] = visited[currentParent];
         currentParent = indexParents[currentParent];
         tailleChemin++;
+        if(iterations > 200) {
+            break;
+        }
 
     }
     renverserChemin(tailleChemin);

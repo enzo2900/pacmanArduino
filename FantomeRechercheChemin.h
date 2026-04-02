@@ -1,7 +1,7 @@
 #ifndef FANTOMERECHERCHECHEMIN_H
 #define FANTOMERECHERCHECHEMIN_H
 #include "Vecteur2D.h"
-#define VISITE_TAILLE_MAX 100
+#define VISITE_TAILLE_MAX 25
 // Chemin mise à jour lorsque la fonction recherche de ce même fichier est appelé.
 // Ce chemin est entre deux positions et est limité par rapport à la taille fixe.
 extern Vecteur2D cheminFantome[VISITE_TAILLE_MAX];
