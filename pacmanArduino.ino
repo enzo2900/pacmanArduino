@@ -21,6 +21,7 @@
 #define ID_POUVOIR 3
 
 int nombreBillesARecuperer;
+int score = 0;
 Vecteur2D pacmanPos = {2,2};
 Vecteur2D pacmanVelocity = {-1,0};
 Vecteur2D pacmanVelocityOptimist = {0,0};
@@ -159,10 +160,13 @@ void recupererObjet(ObjetGrille objet) {
     // Bille
     case ID_BILLE: 
       Serial.println("Touche Bille");
+      score += 50;
+      afficherScore(score);
       nombreBillesARecuperer -=1;
       if(nombreBillesARecuperer == 0) {
         partieGagn();
       }
+      
       break;
     // Pouvoirs
     case ID_POUVOIR :

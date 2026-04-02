@@ -211,7 +211,11 @@ void drawMap(uint8_t map[WIDTH][_HIGH]) {
     }
   }
 }
-
+void afficherScore(int score) {
+  matrix.setCursor(48,5);
+  matrix.setTextColor(matrix.Color333(5,0,0));
+  matrix.println("Scores : " + String(score));
+}
 
 // Dessine tous les objets encore non récupérés par pacman
 void drawObjets() {
