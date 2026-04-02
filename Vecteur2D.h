@@ -15,6 +15,15 @@ struct Vecteur2D
       // Retourne la distance max par rapport à x ou y;
       return abs(direction.x)+abs(direction.y);
   }
+  // Distance rectangulaire entre deux vecteurs
+  int distanceRectangulaire(Vecteur2D autre) {
+      int8_t xDirection = autre.x - x;
+      int8_t yDirection = autre.y - y;
+      Vecteur2D direction =  {xDirection,  yDirection};
+      // Retourne la distance max par rapport à x ou y;
+      return max(abs(direction.x),abs(direction.y));
+  }
+
   Vecteur2D copy() {
     return {x,y};
   }

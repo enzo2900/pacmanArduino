@@ -23,8 +23,8 @@ void Fantome::draw(Vecteur2D pastPos) {
     Vecteur2D pixel2;
     Vecteur2D pixel3;
     //delay(3000);
-    Serial.println("velocité");
-    Serial.println(this->velocity.y);
+    //Serial.println("velocité");
+    //Serial.println(this->velocity.y);
     if(this->velocity.x != 0) {
          pixel1 = {pastPos.x  - velocity.x,pastPos.y};
          pixel2 = {pastPos.x  - velocity.x,pastPos.y +1};
@@ -34,9 +34,9 @@ void Fantome::draw(Vecteur2D pastPos) {
          pixel2 = {pastPos.x -1,pastPos.y  - velocity.y };
          pixel3 = {pastPos.x +1 ,pastPos.y  - velocity.y};
     } 
-    Serial.println("Vecteur pixel1");
-     Serial.println(pixel1.y);
-     Serial.println(pixel1.x);
+    //Serial.println("Vecteur pixel1");
+    // Serial.println(pixel1.y);
+    // Serial.println(pixel1.x);
     redrawObjetsAt(pixel1,pixel2,pixel3);
 }
 void Fantome::changeVelocityWithDirection(Direction direction) {

@@ -14,7 +14,7 @@
 extern const DFRobot_RGBMatrix matrix;
 extern const uint8_t map1[_HIGH][WIDTH] PROGMEM;
 extern const  uint16_t couleurs[];
-extern const ObjetGrille objects[258] ;
+extern ObjetGrille objects[258] ;
 
 int getNombreBilles() ;
 // Est ce qu'un mur est présent au pixel demandée par rapport à la direction du regard.

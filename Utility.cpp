@@ -111,11 +111,11 @@ Direction directionFromVelocity(Vecteur2D velocity) {
 }
 int redrawObjetAt(Vecteur2D pixel) {
     int index1 = rechercheBinaireObjets(pixel,objects);
-    Serial.println("Vecteur2D");
+    /*Serial.println("Vecteur2D");
     Serial.println(pixel.x);
     Serial.println(pixel.y);
     Serial.println("Index");
-    Serial.println(index1);
+    Serial.println(index1);*/
     if(index1 != -1) {
         drawObjet(objects[index1]);
     }

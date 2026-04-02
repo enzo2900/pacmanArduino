@@ -34,54 +34,36 @@ Fantome fantomes[NOMBRE_FANTOMES] = {
 };
 
 void setup() {
+  
   Serial.begin(9600);
   Serial.println("Setup");
-  // Brancher la communication sur RT 18 - 19
-  Serial1.begin(9600);
-  
+  Serial2.begin(9600);
+  while (Serial2.available()) Serial2.read();
   Timer3.initialize(150000);
-  Timer3.attachInterrupt(pacManMouv,1000000);
+  //Timer3.attachInterrupt(pacManMouv,1000000);
   Serial.println(objects[0].position.x);
  
   
   matrix.begin();
-   for(int i = 0 ; i < 10 ; i ++) {
-    //matrix.draw
-    //matrix.drawPixel(objects[i].position.x,objects[i].position.y,matrix.Color333(7,0,0));
-  }
-  drawMap(map1);
-  delay(100);
-  drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
-  //Serial.println(fantomes[0].position.x);
-  for(Fantome& fantome : fantomes) {
-    //Serial.println("Salut");
-    //delay(500);
-    //fantome.draw(fantome.position);
-    //Serial.println(fantome.getPos().x);
-    //Serial.println(fantome.position.x);
-  }
-
-  drawObjets();
-
   nombreBillesARecuperer = getNombreBilles();
   lancerPartie();
 }
 void lancerPartie() {
+  delay(1000);
   partiePerdu = false;
+  pacmanPos = {2,2};
   Timer3.attachInterrupt(pacManMouv,1000000);
   drawMap(map1);
-  delay(100);
-
-  drawObjets();
+  
+  fantomes[0].position = {29,25};
+  fantomes[1].position = {29,28};
+  fantomes[2].position = {29,31};
 
   drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
-  Serial.println(fantomes[0].position.x);
   for(Fantome fantome : fantomes) {
-    Serial.println("Salut");
     fantome.draw(fantome.position);
-    Serial.println(fantome.getPos().x);
-    //Serial.println(fantome.position.x);
   }
+  drawObjets();
 }
 void gauche() {
   if(partiePerdu || partieGagne){
@@ -123,11 +105,7 @@ void bas() {
 // Peut mettre a jour la velocity des fantomes si il touche un mur
 void updateFantomes() {
   for(Fantome& fantome : fantomes) {
-    //delay(1000);
-    //fantome1.update(pacmanPos);
-    //fantome2.update(pacmanPos);
     fantome.update(pacmanPos);
-    //fantomes[2].update(pacmanPos);
   }
 }
 
@@ -136,10 +114,12 @@ bool pacmanToucheFantome() {
 
   for(int i = 0 ; i < NOMBRE_FANTOMES ; i ++) {
     Fantome fantome = fantomes[i];
-    int distance = pacmanPos.distance(fantome.position);
-
-    // DIstance -2 pour prendre en compte la largeur ou longueur de pacman et du fantome 
-    if(distance -2 < 0) {
+    delay(500);
+    int distance = pacmanPos.distanceRectangulaire(fantome.position);
+    //Serial.println("Distance");
+    //Serial.println(distance);
+    // DIstance -3 pour prendre en compte la largeur ou longueur de pacman et du fantome 
+    if(distance -3 < 0) {
       return true;
     }
   }
@@ -209,33 +189,36 @@ void pacmanMeurt() {
   // TODO la partie est perdu ou perd une vie
   partiePerd();
 }  
-void loop() {
+void inputHandling() {
+  if (Serial2.available() > 0) {
+    char command = Serial2.read();
 
-  if (Serial1.available() > 0) {
-    char command = Serial1.read();
+    //delay(5);
+     Serial.println(command);
     switch (command) {
-      case 'gauche' :
-        pacmanVelocityOptimist = getVecteurFrom(GAUCHE);
-        directionMemorise = GAUCHE;
+      case 'g' :
+        gauche();
         break;
-      case 'droite':
-        pacmanVelocityOptimist = getVecteurFrom(DROITE);
-        directionMemorise = DROITE;
+      case 'd':
+        droite();
         break;
-      case 'haut':
-        pacmanVelocityOptimist = getVecteurFrom(HAUT);
-        directionMemorise = HAUT;
+      case 'h':
+        haut();
         break;
-      case 'bas':
-        pacmanVelocityOptimist = getVecteurFrom(BAS);
-        directionMemorise = BAS;
+      case 'b':
+        bas();
         break;
       default:
-        Serial.println(command);
+        break;
+        //Serial.println(command);
     }
   }
-
-  delay(200);
+}
+void loop() {
+  
+  inputHandling();
+  if(partiePerdu) return;
+  delay(50);
   //pacManMouv();
   updateFantomes();
   if(pacmanToucheFantome()) {
