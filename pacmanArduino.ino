@@ -39,6 +39,7 @@ Fantome fantomes[NOMBRE_FANTOMES] = {
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
+  Serial1.begin(9600);
   Timer3.initialize(150000);
   Timer3.attachInterrupt(pacManMouv,1000000);
   
@@ -160,6 +161,29 @@ void pacmanMeurt() {
   partiePerdu = true;
 }
 void loop() {
+  if (Serial1.available() > 0) {
+    char command = Serial1.read();
+    switch (command) {
+      case "g" :
+        pacmanVelocityOptimist = getVecteurFrom(GAUCHE);
+        directionMemorise = GAUCHE;
+        break;
+      case "d":
+        pacmanVelocityOptimist = getVecteurFrom(DROITE);
+        directionMemorise = DROITE;
+        break;
+      case "h":
+        pacmanVelocityOptimist = getVecteurFrom(HAUT);
+        directionMemorise = HAUT;
+        break;
+      case "b":
+        pacmanVelocityOptimist = getVecteurFrom(BAS);
+        directionMemorise = BAS;
+        break;
+      default:
+        Serial.println("Commande inconnu");
+    }
+  }
 
   delay(1000);
   //pacManMouv();
