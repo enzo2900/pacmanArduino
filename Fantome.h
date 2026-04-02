@@ -42,7 +42,7 @@ private:
     void updateOptimiste(Vecteur2D pacmanPos);
 
     // Ajoute toutes les positions au chemin interne du fantome jusqu'a la fin du chemin
-    void addChemin(Vecteur2D cheminF[],int tailleChemin);
+    void addChemin(int tailleChemin);
     Direction lastDirection = NONE;
     Direction directions[4]{};
     ComportementFantome comportement;

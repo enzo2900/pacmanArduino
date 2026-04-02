@@ -19,6 +19,7 @@ void Fantome::draw(Vecteur2D pastPos) {
     
     
     drawEntity(pastPos, this->position, this->couleur);
+
     Vecteur2D pixel1;
     Vecteur2D pixel2;
     Vecteur2D pixel3;
@@ -48,7 +49,7 @@ void Fantome::randomizeFantomeVelocity(Direction directionPossibles[4], int tail
     changeVelocityWithDirection(directionPossibles[choixDirection]);
 }
 
-void Fantome::addChemin(Vecteur2D cheminF[],int tailleChemin) {
+void Fantome::addChemin(int tailleChemin) {
     for (int i = 0 ; i < tailleChemin ; i++) {
         chemin[i] = cheminFantome[i];
     }
@@ -58,13 +59,13 @@ void Fantome::updatePoursuit(Vecteur2D pacmanPos) {
     if (this->indexChemin == -1 ) {
         int tailleC = recherche(this->position,pacmanPos);
         this->tailleChemin = tailleC;
-        addChemin(cheminFantome,tailleC);
+        addChemin(tailleC);
         indexChemin = 0;
     }
     if (this->indexChemin == tailleChemin) {
        int tailleC = recherche(this->position,pacmanPos);
         this->tailleChemin = tailleC;
-        addChemin(cheminFantome,tailleC);
+        addChemin(tailleC);
 
         indexChemin = 0;
     }
