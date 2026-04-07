@@ -33,4 +33,6 @@ void drawObjets() ;
 void drawObjet(ObjetGrille objetGrille);
 void drawEcranDefaite();
 void drawEcranVictoire() ;
+// Reset les ids des objets par rapport à la partie décimale sauvegardée.
+void resetObjects();
 #endif

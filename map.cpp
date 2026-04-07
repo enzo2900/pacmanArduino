@@ -137,7 +137,7 @@ int getTailleTableauObjets() {
 }
 //  0 = rien, 1 = Mur, 2 = bille, 3 = pouvoir
 //  0 = rien, 1 = Mur, 2 = bille, 3 = Pouvoir
-const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(0, 7, 0), matrix.Color333(0, 7, 0) };
+const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(0, 7, 0), matrix.Color333(7, 7, 7) };
 const uint16_t pacmanCouleur = matrix.Color333(0, 7, 7);
 int getNombreBilles() {
   int nombreBilles = 0;
@@ -175,7 +175,6 @@ bool estMurPresent(int directionX,int directionY, Vecteur2D pos)  {
 bool estMurPresent(Vecteur2D direction, Vecteur2D pos)  {
     return estMurPresent(direction.x,direction.y, pos.x, pos.y);
 }
-
 
 // Dessine pacman sur la grille
 // Enleve les pixels de la derniere position de pacman
@@ -231,7 +230,7 @@ void drawEcranDefaite(){
   matrix.setTextSize(1);
   matrix.setCursor(10,10);
   //Dessine texte
-  matrix.println("Partie\n perdu");
+  matrix.println("Partie\n perdue");
 }
 void drawEcranVictoire() {
   matrix.fillScreen(matrix.Color333(0,0,0));
@@ -240,11 +239,21 @@ void drawEcranVictoire() {
   matrix.setTextSize(1);
   matrix.setCursor(10,10);
   //Dessine texte
-  matrix.println("Partie\n Gagné");
+  matrix.println("Partie\n Gagnée");
 }
 // Dessine un objet à sa position avec sa couleur
 void drawObjet(ObjetGrille objetGrille) {
   //Serial.println(objetGrille.position.x);
   uint8_t couleur = couleurs[objetGrille.id %10];
   matrix.drawPixel(objetGrille.position.x,objetGrille.position.y,couleur);
+}
+
+// Reset les ids des objets par rapport à la partie décimale sauvegardée.
+void resetObjects() {
+  for(int i = 0 ; i < getTailleTableauObjets(); i++) {
+    ObjetGrille objet = objects[i];
+    uint8_t savedId = getSavedIdObject(objet);
+    objet.id =savedId + savedId * 10;
+    objects[i] = objet; 
+  }
 }

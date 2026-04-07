@@ -13,6 +13,7 @@
 #include "Utility.h"
 #include "Vecteur2D.h"
 #include "TimerThree.h"
+#include "TimerFour.h"
 #include "Direction.h"
 #include "Fantome.h"
 #define NOMBRE_FANTOMES 3
@@ -40,39 +41,39 @@ void setup() {
   Serial2.begin(9600);
   while (Serial2.available()) Serial2.read();
   Timer3.initialize(150000);
+  Timer4.initialize(150000);
   //Timer3.attachInterrupt(pacManMouv,1000000);
   Serial.println(objects[0].position.x);
  
   
   matrix.begin();
-  nombreBillesARecuperer = getNombreBilles();
+  
   lancerPartie();
 }
 void lancerPartie() {
   delay(1000);
   partiePerdu = false;
+  partieGagne = false;
   pacmanPos = {2,2};
-  Timer3.attachInterrupt(pacManMouv,1000000);
+  resetObjects();
+  nombreBillesARecuperer = getNombreBilles();
+  Timer3.attachInterrupt(pacManMouv,200000);
+  Timer4.attachInterrupt(fantomeLoop,400000);
   drawMap(map1);
-  
-  fantomes[0].position = {29,25};
-  fantomes[1].position = {29,28};
-  fantomes[2].position = {29,31};
+  fantomes[0].updatePos({29,25});
+  fantomes[1].updatePos({29,28});
+  fantomes[2].updatePos({29,31});
+  for(Fantome& fantome : fantomes) {
+      fantome.indexChemin = -1;
+  }
 
   drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
-  for(Fantome fantome : fantomes) {
+  for(Fantome& fantome : fantomes) {
     fantome.draw(fantome.position);
   }
   drawObjets();
 }
-// Reset les ids des objets par rapport à la partie décimale sauvegardée.
-void resetObjects() {
-  for(int i = 0 ; i < getTailleTableauObjets(); i++) {
-    ObjetGrille objet = objects[i];
-    objet.id =objects[i].id /10 + (objects[i].id /10) * 10;
-    objects[i] = objet; 
-  }
-}
+
 void gauche() {
   if(partiePerdu || partieGagne){
     lancerPartie();
@@ -122,7 +123,7 @@ bool pacmanToucheFantome() {
 
   for(int i = 0 ; i < NOMBRE_FANTOMES ; i ++) {
     Fantome fantome = fantomes[i];
-    delay(500);
+    //zdelay(500);
     int distance = pacmanPos.distanceRectangulaire(fantome.position);
     //Serial.println("Distance");
     //Serial.println(distance);
@@ -142,12 +143,14 @@ void verifierPacmanToucheObjet() {
     recupererObjet(objet);
     
     // Mise a jour du type d'objet affiché
-    objet.id = objet.id /10 ;
+    objet.id = getSavedIdObject(objet) *10;
     objects[indexObjet] = objet;
   }
 }
 void partieGagn() {
   partieGagne = true;
+  Timer3.detachInterrupt();
+  Timer4.detachInterrupt();
   drawEcranVictoire();
 }
 
@@ -191,6 +194,7 @@ void pacManMouv(){
 void partiePerd() {
   partiePerdu = true;
   Timer3.detachInterrupt();
+  Timer4.detachInterrupt();
   drawEcranDefaite();
 }
 void pacmanMeurt() {
@@ -222,14 +226,17 @@ void inputHandling() {
     }
   }
 }
-void loop() {
-  
-  inputHandling();
-  if(partiePerdu) return;
-  delay(50);
+void fantomeLoop() {
+  if(partiePerdu || partieGagne) return;
+  //delay(200);
   //pacManMouv();
   updateFantomes();
   if(pacmanToucheFantome()) {
     pacmanMeurt();
   }
+}
+void loop() {
+  
+  inputHandling();
+  
 }

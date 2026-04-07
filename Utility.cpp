@@ -66,7 +66,6 @@ int nombreDirectionsPossible(Vecteur2D position,Direction directionPossibles[]) 
     }
     if (!estMurPresent(getVecteurFrom(GAUCHE),position + (getVecteurFrom(GAUCHE)*2))) {
         //Serial.println("Gauche intersection");
-        delay(50);
         directionPossibles[indexDirection] = GAUCHE;
         indexDirection++;
     } else {
@@ -125,7 +124,6 @@ int redrawObjetsAt(Vecteur2D pixel1, Vecteur2D pixel2, Vecteur2D pixel3) {
     redrawObjetAt(pixel2);
     redrawObjetAt(pixel3);
 }
-
 
 
 // Recherche binaire du tableau d'objet pour trouver en temps logarithmique l'objet de la grille à la position demandée.

@@ -21,6 +21,7 @@ public:
     void update(Vecteur2D pacmanPos);
 
     Vecteur2D getPos();
+    void updatePos(Vecteur2D pos);
     // Dessine le fantome sur la matrice.
     void draw(Vecteur2D pastPos) ;
     // Change la vélocité du fantome par rapport à la direction donnée
@@ -30,6 +31,7 @@ public:
     Vecteur2D position{};
     Vecteur2D velocity{};
      uint16_t couleur;
+     int indexChemin = -1;
 private:
     
     // Le fantome suit un chemin optimisé vers pacman
@@ -48,7 +50,7 @@ private:
     ComportementFantome comportement;
     Vecteur2D chemin[VISITE_TAILLE_MAX];
     int tailleChemin ;
-    int indexChemin = -1;
+   
    
 
 };

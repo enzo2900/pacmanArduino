@@ -15,6 +15,9 @@ Fantome::Fantome(const Vecteur2D basePosition, const Vecteur2D baseVelocity, uin
 Vecteur2D Fantome::getPos() {
     return this->position;
 }
+void Fantome::updatePos(Vecteur2D pos) {
+    this->position = pos;
+}
 void Fantome::draw(Vecteur2D pastPos) {
     
     
@@ -23,7 +26,6 @@ void Fantome::draw(Vecteur2D pastPos) {
     Vecteur2D pixel1;
     Vecteur2D pixel2;
     Vecteur2D pixel3;
-    //delay(3000);
     //Serial.println("velocité");
     //Serial.println(this->velocity.y);
     if(this->velocity.x != 0) {
