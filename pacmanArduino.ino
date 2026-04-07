@@ -1,14 +1,9 @@
 /*!
- * @file testRGBMatrix.ino
- * @brief Run the routine to test the RGB LED Matrix Panel
- * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @license     The MIT License (MIT)
- * @author [TangJie]](jie.tang@dfrobot.com)
- * @version  V1.0.1
- * @date  2022-03-23
- * @url https://github.com/DFRobot/DFRobot_RGBMatrix
+ * @file pacmanArduino.ino
+ * @brief Jeu de Pacman sur matrice 64x64
+ * @author Cluzel Enzo, Faussurier Mateo
  */
-#include <avr/pgmspace.h>// Hardware-specific library
+#include <avr/pgmspace.h>
 #include "map.h"
 #include "Utility.h"
 #include "Vecteur2D.h"
@@ -16,7 +11,9 @@
 #include "TimerFour.h"
 #include "Direction.h"
 #include "Fantome.h"
+// Nombre de fantomes affichés
 #define NOMBRE_FANTOMES 3
+// id des billes, une bille est représentée par cet id avec 
 #define ID_BILLE 2
 #define ID_POUVOIR 3
 
