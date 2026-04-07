@@ -19,11 +19,6 @@
 #define ID_BILLE 2
 #define ID_POUVOIR 3
 
-int pinBtnGauche = 2;
-int pinBtnDroit = 3;
-int pinBtnHaut = 18;
-int pinBtnBas = 19;
-
 Vecteur2D pacmanPos = {2,2};
 Vecteur2D pacmanVelocity = {-1,0};
 Vecteur2D pacmanVelocityOptimist = {0,0};
@@ -39,6 +34,9 @@ Fantome fantomes[NOMBRE_FANTOMES] = {
 void setup() {
   Serial.begin(9600);
   Serial.println("Setup");
+  // Brancher la communication sur RT 18 - 19
+  Serial1.begin(9600);
+  
   Timer3.initialize(150000);
   Timer3.attachInterrupt(pacManMouv,1000000);
   
@@ -53,37 +51,8 @@ void setup() {
     Serial.println(fantome.getPos().x);
     //Serial.println(fantome.position.x);
   }
-  // gestion des boutons
-  pinMode(pinBtnGauche,INPUT_PULLUP);
-  pinMode(pinBtnDroit,INPUT_PULLUP);
-  pinMode(pinBtnHaut,INPUT_PULLUP);
-  pinMode(pinBtnBas,INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(pinBtnGauche), gauche, FALLING);
-  attachInterrupt(digitalPinToInterrupt(pinBtnDroit), droite, FALLING);
-  attachInterrupt(digitalPinToInterrupt(pinBtnHaut), haut, FALLING);
-  attachInterrupt(digitalPinToInterrupt(pinBtnBas), bas, FALLING);
 
   drawObjets();
-}
-
-void gauche() {
-  pacmanVelocityOptimist = getVecteurFrom(GAUCHE);
-  directionMemorise = GAUCHE;
-}
-
-void droite() {
-  pacmanVelocityOptimist = getVecteurFrom(DROITE);
-  directionMemorise = DROITE;
-}
-
-void haut() {
-  pacmanVelocityOptimist = getVecteurFrom(HAUT);
-  directionMemorise = HAUT;
-}
-
-void bas() {
-  pacmanVelocityOptimist = getVecteurFrom(BAS);
-  directionMemorise = BAS;
 }
 
 // Met a jour la position des fantomes
