@@ -1,9 +1,20 @@
-//
-// Created by enzoc on 24/03/2026.
-//
+/**
+ * Un fantôme se déplace sur la matrice sans pouvoir traverser les murs.
+ * Si un fantôme entre en contact avec pacman le joueur perdra la partie.
+ */
 
 #include "Fantome.h"
 #include "map.h"
+/**
+ * Un Fantome est défini par une position et une vitesse qui mettra à jour sa
+ * position en fonction de sa direction. Il s'affichera avec une couleur
+ * spécifique et cherchera à toucher pacman avec une stratégie particulière
+ * spécifiée par son comportement.
+ * @param basePosition Position initial, là où il apparaîtra au début d'une partie.
+ * @param baseVelocity La vitesse de déplacement du fantôme.
+ * @param couleurBase  La couleur du fantôme.
+ * @param comportement L'algorithme de déplacement du fantôme.
+ */
 Fantome::Fantome(const Vecteur2D basePosition, const Vecteur2D baseVelocity, uint16_t couleurBase, ComportementFantome comportement,long baseTimeBeforeMovement)  {
     position = basePosition;
     velocity = baseVelocity;
@@ -11,18 +22,27 @@ Fantome::Fantome(const Vecteur2D basePosition, const Vecteur2D baseVelocity, uin
     timeBeforeMovement=  baseTimeBeforeMovement;
     currentTimeForMovement = 0;
     this->comportement =comportement;
-    
 }
 
+/**
+ * Récupère la prosition d'un fantôme.
+ */
 Vecteur2D Fantome::getPos() {
     return this->position;
 }
+
+/**
+ *Met à jour la position du fantôme.
+ */
 void Fantome::updatePos(Vecteur2D pos) {
     this->position = pos;
 }
+
+/**
+ * Dessine le fantôme à sa nouvelle position. Efface le fantôme présent sur la
+ * position précédente.
+ */
 void Fantome::draw(Vecteur2D pastPos) {
-    
-    
     drawEntity(pastPos, this->position, this->couleur);
 
     Vecteur2D pixel1;
@@ -44,6 +64,10 @@ void Fantome::draw(Vecteur2D pastPos) {
     // Serial.println(pixel1.x);
     redrawObjetsAt(pixel1,pixel2,pixel3);
 }
+
+/**
+ * 
+ */
 void Fantome::changeVelocityWithDirection(Direction direction) {
     this->velocity = getVecteurFrom(direction);
 }
