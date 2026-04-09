@@ -28,6 +28,7 @@ void drawEntity(int lastX, int lastY, int xPos, int yPos, uint16_t couleur);
 void drawMap(uint8_t map[WIDTH][_HIGH]);
 void drawPacman(int lastX, int lastY, Vecteur2D newPos) ;
 void drawPacman(int lastX, int lastY, int xPos, int yPos);
+void afficherTexteScore() ;
 void drawObjets() ;
 // Dessine un objet à sa position avec sa couleur
 void drawObjet(ObjetGrille objetGrille);

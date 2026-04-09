@@ -30,9 +30,9 @@ Direction directionMemorise = NONE;
 volatile bool partiePerdu = false;
 volatile bool partieGagne = false;
 Fantome fantomes[NOMBRE_FANTOMES] = {
-  Fantome({29,25}, {0, -1},matrix.Color333(2, 7, 0),POURSUIT),
-   Fantome({29,28}, {0, 1},matrix.Color333(6, 0, 0),OPTIMISTE),
-   Fantome({29,31}, {0, 1},matrix.Color333(6, 6, 0),ALEATOIRE),
+  Fantome({26,30}, {0, -1},matrix.Color333(2, 7, 0),POURSUIT),
+   Fantome({33,30}, {0, 1},matrix.Color333(6, 0, 0),OPTIMISTE),
+   Fantome({29,30}, {0, 1},matrix.Color333(6, 6, 0),ALEATOIRE),
 };
 
 void setup() {
@@ -45,34 +45,44 @@ void setup() {
   Timer4.initialize(150000);
   //Timer3.attachInterrupt(pacManMouv,1000000);
   Serial.println(objects[0].position.x);
- 
   
   matrix.begin();
   
   lancerPartie();
 }
 void lancerPartie() {
+  matrix.fillScreen(matrix.Color333(0,0,0));
   delay(1000);
   partiePerdu = false;
   partieGagne = false;
   pacmanPos = {2,2};
   resetObjects();
+  
   nombreBillesARecuperer = getNombreBilles();
-  Timer3.attachInterrupt(pacManMouv,200000);
-  Timer4.attachInterrupt(fantomeLoop,400000);
   drawMap(map1);
-  fantomes[0].updatePos({29,25});
-  fantomes[1].updatePos({29,28});
-  fantomes[2].updatePos({29,31});
+  Vecteur2D fantome1PastPos = fantomes[0].position.copy();
+  Vecteur2D fantome2PastPos = fantomes[1].position.copy();
+  Vecteur2D fantome3PastPos = fantomes[2].position.copy();
+  fantomes[0].updatePos({26,29});
+  fantomes[1].updatePos({29,29});
+  fantomes[2].updatePos({33,29});
   for(Fantome& fantome : fantomes) {
       fantome.indexChemin = -1;
   }
 
   drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
-  for(Fantome& fantome : fantomes) {
-    fantome.draw(fantome.position);
-  }
+  fantomes[0].draw(fantome1PastPos);
+  fantomes[1].draw(fantome2PastPos);
+  fantomes[2].draw(fantome3PastPos);
+  delay(300);
   drawObjets();
+
+  delay(1000);
+  Timer3.attachInterrupt(pacManMouv,200000);
+  Timer4.attachInterrupt(fantomeLoop,400000);
+  score = 0;
+  afficherTexteScore();
+  afficherScore(score);
 }
 
 void gauche() {
@@ -159,7 +169,7 @@ void recupererObjet(ObjetGrille objet) {
   switch(objet.id %10) {
     // Bille
     case ID_BILLE: 
-      Serial.println("Touche Bille");
+      //Serial.println("Touche Bille");
       score += 50;
       afficherScore(score);
       nombreBillesARecuperer -=1;
@@ -210,7 +220,7 @@ void inputHandling() {
     char command = Serial2.read();
 
     //delay(5);
-     Serial.println(command);
+    // Serial.println(command);
     switch (command) {
       case 'g' :
         gauche();
