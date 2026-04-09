@@ -30,9 +30,9 @@ Direction directionMemorise = NONE;
 volatile bool partiePerdu = false;
 volatile bool partieGagne = false;
 Fantome fantomes[NOMBRE_FANTOMES] = {
-  Fantome({26,30}, {0, -1},matrix.Color333(2, 7, 0),POURSUIT),
-   Fantome({33,30}, {0, 1},matrix.Color333(6, 0, 0),OPTIMISTE),
-   Fantome({29,30}, {0, 1},matrix.Color333(6, 6, 0),ALEATOIRE),
+  Fantome({26,30}, {0, -1},matrix.Color333(3, 3, 6),POURSUIT,260),
+   Fantome({33,30}, {0, 1},matrix.Color333(6, 0, 0),POURSUIT,200),
+   Fantome({29,30}, {0, 1},matrix.Color333(5, 2, 2),ALEATOIRE,100),
 };
 
 void setup() {
@@ -58,28 +58,27 @@ void lancerPartie() {
   pacmanPos = {2,2};
   resetObjects();
   
-  nombreBillesARecuperer = getNombreBilles();
-  drawMap(map1);
-  Vecteur2D fantome1PastPos = fantomes[0].position.copy();
-  Vecteur2D fantome2PastPos = fantomes[1].position.copy();
-  Vecteur2D fantome3PastPos = fantomes[2].position.copy();
   fantomes[0].updatePos({26,29});
   fantomes[1].updatePos({29,29});
   fantomes[2].updatePos({33,29});
   for(Fantome& fantome : fantomes) {
       fantome.indexChemin = -1;
   }
-
+  Vecteur2D fantome1PastPos = fantomes[0].position.copy();
+  Vecteur2D fantome2PastPos = fantomes[1].position.copy();
+  Vecteur2D fantome3PastPos = fantomes[2].position.copy();
   drawPacman(pacmanPos.x, pacmanPos.y, pacmanPos.x, pacmanPos.y);
   fantomes[0].draw(fantome1PastPos);
   fantomes[1].draw(fantome2PastPos);
   fantomes[2].draw(fantome3PastPos);
+  nombreBillesARecuperer = getNombreBilles();
+  drawMap(map1);
   delay(300);
   drawObjets();
 
   delay(1000);
   Timer3.attachInterrupt(pacManMouv,200000);
-  Timer4.attachInterrupt(fantomeLoop,400000);
+  Timer4.attachInterrupt(fantomeLoop,300000);
   score = 0;
   afficherTexteScore();
   afficherScore(score);
@@ -147,7 +146,16 @@ bool pacmanToucheFantome() {
 }
 
 void verifierPacmanToucheObjet() {
-  int indexObjet = rechercheBinaireObjets(pacmanPos,objects,getTailleTableauObjets());
+  recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x,pacmanPos.y-1},objects,getTailleTableauObjets()));
+  recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x-1,pacmanPos.y},objects,getTailleTableauObjets()));
+  recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x+1,pacmanPos.y},objects,getTailleTableauObjets()));
+  recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x,pacmanPos.y+1},objects,getTailleTableauObjets()));
+  recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x+1,pacmanPos.y-1},objects,getTailleTableauObjets()));
+  recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x-1,pacmanPos.y-1},objects,getTailleTableauObjets()));
+  recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x+1,pacmanPos.y+1},objects,getTailleTableauObjets()));
+  recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x-1,pacmanPos.y+1},objects,getTailleTableauObjets()));
+}
+void recupererObjetPacman(int indexObjet) {
   if(indexObjet != -1) {
     ObjetGrille objet = objects[indexObjet];
 
@@ -244,7 +252,7 @@ void fantomeLoop() {
   if(partiePerdu || partieGagne) return;
   //delay(200);
   //pacManMouv();
-  updateFantomes();
+  //updateFantomes();
   if(pacmanToucheFantome()) {
     pacmanMeurt();
   }
@@ -252,5 +260,6 @@ void fantomeLoop() {
 void loop() {
   
   inputHandling();
-  
+  if(partiePerdu || partieGagne) return;
+  updateFantomes();
 }

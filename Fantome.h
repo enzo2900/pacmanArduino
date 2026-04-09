@@ -14,9 +14,9 @@ enum ComportementFantome {
     OPTIMISTE,
 };
 class Fantome {
-
+    
 public:
-    Fantome(Vecteur2D basePosition, Vecteur2D baseVelocity,uint16_t couleur,ComportementFantome comportement);
+    Fantome(Vecteur2D basePosition, Vecteur2D baseVelocity,uint16_t couleur,ComportementFantome comportement,long timeBeforeMovement);
     // Met à jour la position du fantome par rapport à son comportement.
     void update(Vecteur2D pacmanPos);
 
@@ -45,6 +45,8 @@ private:
 
     // Ajoute toutes les positions au chemin interne du fantome jusqu'a la fin du chemin
     void addChemin(int tailleChemin);
+    unsigned long timeBeforeMovement;
+    unsigned long currentTimeForMovement;
     Direction lastDirection = NONE;
     Direction directions[4]{};
     ComportementFantome comportement;

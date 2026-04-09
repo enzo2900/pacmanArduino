@@ -4,10 +4,12 @@
 
 #include "Fantome.h"
 #include "map.h"
-Fantome::Fantome(const Vecteur2D basePosition, const Vecteur2D baseVelocity, uint16_t couleurBase, ComportementFantome comportement)  {
+Fantome::Fantome(const Vecteur2D basePosition, const Vecteur2D baseVelocity, uint16_t couleurBase, ComportementFantome comportement,long baseTimeBeforeMovement)  {
     position = basePosition;
     velocity = baseVelocity;
     couleur = couleurBase;
+    timeBeforeMovement=  baseTimeBeforeMovement;
+    currentTimeForMovement = 0;
     this->comportement =comportement;
     
 }
@@ -112,6 +114,13 @@ void Fantome::updateOptimiste(Vecteur2D pacmanPos) {
 }
 
 void Fantome::update(Vecteur2D pacmanPos){
+    //Serial.println(millis());
+    if(millis() < currentTimeForMovement + timeBeforeMovement) {
+        Serial.println(millis());
+        return;
+    } else {
+        currentTimeForMovement = millis();
+    }
     Vecteur2D previousPos = this->position;
 
     switch (this->comportement) {

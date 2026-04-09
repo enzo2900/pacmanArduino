@@ -138,7 +138,7 @@ int getTailleTableauObjets() {
 }
 //  0 = rien, 1 = Mur, 2 = bille, 3 = pouvoir
 //  0 = rien, 1 = Mur, 2 = bille, 3 = Pouvoir
-const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(0, 3, 0), matrix.Color333(2, 0, 0) };
+const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(0, 3, 0), matrix.Color333(0, 0, 3) };
 const uint16_t pacmanCouleur = matrix.Color333(7, 7, 0);
 int getNombreBilles() {
   int nombreBilles = 0;
@@ -181,7 +181,9 @@ bool estMurPresent(Vecteur2D direction, Vecteur2D pos)  {
 // Enleve les pixels de la derniere position de pacman
 void drawPacman(int lastX, int lastY, int xPos, int yPos) {
   matrix.drawRect(lastX - 1, lastY - 1, 3, 3, couleurs[0]);
-  matrix.drawRect(xPos - 1, yPos - 1, 3, 3, pacmanCouleur);
+
+  matrix.fillRect(xPos - 1, yPos - 1, 3, 3, pacmanCouleur);
+  
 }
 
 // Dessine pacman sur la grille
@@ -207,6 +209,7 @@ void drawMap(uint8_t map[WIDTH][_HIGH]) {
     for (uint16_t j = 0; j < _HIGH; j++) {
       // Récupére l'adresse mémoire de la valeur du tableau à i, j puis lis la valeur dans la mémoire flash
       byte mapValue = pgm_read_byte(&(map1[i][j]));
+      if(mapValue == 0) continue;
       uint16_t couleur = couleurs[mapValue];
       matrix.drawPixel(i, j, couleur);
     }
