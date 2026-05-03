@@ -32,7 +32,8 @@ Vecteur2D Fantome::getPos() {
 }
 
 /**
- *Met à jour la position du fantôme.
+ * Met à jour la position du fantôme.
+ * @param pos La nouvelle position du fantôme.
  */
 void Fantome::updatePos(Vecteur2D pos) {
     this->position = pos;
@@ -41,6 +42,7 @@ void Fantome::updatePos(Vecteur2D pos) {
 /**
  * Dessine le fantôme à sa nouvelle position. Efface le fantôme présent sur la
  * position précédente.
+ * @param pastPos L'ancienne position du fantôme.
  */
 void Fantome::draw(Vecteur2D pastPos) {
     drawEntity(pastPos, this->position, this->couleur);
@@ -63,6 +65,7 @@ void Fantome::draw(Vecteur2D pastPos) {
 /**
  * Change la vitesse en fonction de la direction spécifié. La vitesse est un
  * vecteur corespondant à la vitesse sur l'axe x et y.
+ * @param direction La nouvelle direction définie.
  */
 void Fantome::changeVelocityWithDirection(Direction direction) {
     this->velocity = getVecteurFrom(direction);
@@ -70,6 +73,8 @@ void Fantome::changeVelocityWithDirection(Direction direction) {
 
 /**
  * Permet d'obtenir une vitesse aléatoire pour un fantome.
+ * @param directionPossibles Les directions possibles.
+ * @param tailleTableauAssigne Les directions empreintables.
  */
 void Fantome::randomizeFantomeVelocity(Direction directionPossibles[4], int tailleTableauAssigne) {
     uint8_t choixDirection =  (uint8_t)random(tailleTableauAssigne);;
@@ -77,8 +82,9 @@ void Fantome::randomizeFantomeVelocity(Direction directionPossibles[4], int tail
     changeVelocityWithDirection(directionPossibles[choixDirection]);
 }
 
-/*
+/**
  * Ajoute un chemin possible du fantôme vers le joueur.
+ * @param tailleChemin La longueur du chemin vers pacman.
  */
 void Fantome::addChemin(int tailleChemin) {
     for (int i = 0 ; i < tailleChemin ; i++) {
@@ -86,9 +92,10 @@ void Fantome::addChemin(int tailleChemin) {
     }
 }
 
-/*
+/**
  * Met à jour la poursuite d'un fantôme. Cela permet de redéfinir sa position
  * par rapport à celle du joueur.
+ * @param pacmanPos Position actuelle de pacman.
  */
 void Fantome::updatePoursuit(Vecteur2D pacmanPos) {
     Vecteur2D pastPos = this->position;
@@ -113,6 +120,7 @@ void Fantome::updatePoursuit(Vecteur2D pacmanPos) {
 
 /**
  * Met à jour une direction aléatoire à partir d'une intersection.
+ * @param pacmanPos Position actuelle de pacman.
  */
 void Fantome::updateAleatoire(Vecteur2D pacmanPos) {
     int nombreDirections = nombreDirectionsPossible(this->position,this->directions) ;
@@ -130,6 +138,7 @@ void Fantome::updateAleatoire(Vecteur2D pacmanPos) {
 
 /**
  * Met à jour la décision de la direction pour l'algorithme optimiste.
+ * @param pacmanPos Position actuelle de pacman.
  */
 void Fantome::updateOptimiste(Vecteur2D pacmanPos) {
      int nombreDirections = nombreDirectionsPossible(this->position,this->directions) ;
@@ -152,6 +161,7 @@ void Fantome::updateOptimiste(Vecteur2D pacmanPos) {
 
 /**
  * Définis la nouvelle position de pacman pour un fantôme.
+ * @param pacmanPos Position actuelle de pacman.
  */
 void Fantome::update(Vecteur2D pacmanPos){
     if(millis() < currentTimeForMovement + timeBeforeMovement) {
@@ -175,6 +185,3 @@ void Fantome::update(Vecteur2D pacmanPos){
     }
     draw(previousPos);
 }
-
-
-
