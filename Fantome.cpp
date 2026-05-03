@@ -48,8 +48,6 @@ void Fantome::draw(Vecteur2D pastPos) {
     Vecteur2D pixel1;
     Vecteur2D pixel2;
     Vecteur2D pixel3;
-    //Serial.println("velocité");
-    //Serial.println(this->velocity.y);
     if(this->velocity.x != 0) {
          pixel1 = {pastPos.x  - velocity.x,pastPos.y};
          pixel2 = {pastPos.x  - velocity.x,pastPos.y +1};
@@ -59,29 +57,39 @@ void Fantome::draw(Vecteur2D pastPos) {
          pixel2 = {pastPos.x -1,pastPos.y  - velocity.y };
          pixel3 = {pastPos.x +1 ,pastPos.y  - velocity.y};
     } 
-    //Serial.println("Vecteur pixel1");
-    // Serial.println(pixel1.y);
-    // Serial.println(pixel1.x);
     redrawObjetsAt(pixel1,pixel2,pixel3);
 }
 
 /**
- * 
+ * Change la vitesse en fonction de la direction spécifié. La vitesse est un
+ * vecteur corespondant à la vitesse sur l'axe x et y.
  */
 void Fantome::changeVelocityWithDirection(Direction direction) {
     this->velocity = getVecteurFrom(direction);
 }
+
+/**
+ * Permet d'obtenir une vitesse aléatoire pour un fantome.
+ */
 void Fantome::randomizeFantomeVelocity(Direction directionPossibles[4], int tailleTableauAssigne) {
     uint8_t choixDirection =  (uint8_t)random(tailleTableauAssigne);;
 
     changeVelocityWithDirection(directionPossibles[choixDirection]);
 }
 
+/*
+ * Ajoute un chemin possible du fantôme vers le joueur.
+ */
 void Fantome::addChemin(int tailleChemin) {
     for (int i = 0 ; i < tailleChemin ; i++) {
         chemin[i] = cheminFantome[i];
     }
 }
+
+/*
+ * Met à jour la poursuite d'un fantôme. Cela permet de redéfinir sa position
+ * par rapport à celle du joueur.
+ */
 void Fantome::updatePoursuit(Vecteur2D pacmanPos) {
     Vecteur2D pastPos = this->position;
     if (this->indexChemin == -1 ) {
@@ -102,6 +110,10 @@ void Fantome::updatePoursuit(Vecteur2D pacmanPos) {
     this->position = newPosition;
     indexChemin ++;
 }
+
+/**
+ * Met à jour une direction aléatoire à partir d'une intersection.
+ */
 void Fantome::updateAleatoire(Vecteur2D pacmanPos) {
     int nombreDirections = nombreDirectionsPossible(this->position,this->directions) ;
     if (nombreDirections > 2) {
@@ -116,6 +128,9 @@ void Fantome::updateAleatoire(Vecteur2D pacmanPos) {
     this->position = (this->position + this->velocity);
 }
 
+/**
+ * Met à jour la décision de la direction pour l'algorithme optimiste.
+ */
 void Fantome::updateOptimiste(Vecteur2D pacmanPos) {
      int nombreDirections = nombreDirectionsPossible(this->position,this->directions) ;
     if (nombreDirections > 2) {
@@ -123,12 +138,10 @@ void Fantome::updateOptimiste(Vecteur2D pacmanPos) {
                 nombreDirections = removeFromDirection(this->directions,lastDirection,nombreDirections);
         }
         Direction bestDir = closestToTarget(this->position,pacmanPos, this->directions,nombreDirections);
-       // printDirection(bestDir);
         changeVelocityWithDirection(bestDir);
         this->lastDirection= bestDir;
     }else if(estMurPresent(this->velocity,this->position+ (this->velocity*2))) {
         Direction bestDir = closestToTarget(this->position,pacmanPos, this->directions,nombreDirections);
-        //printDirection(bestDir);
         changeVelocityWithDirection(bestDir);
         this->lastDirection = bestDir;
 
@@ -137,8 +150,10 @@ void Fantome::updateOptimiste(Vecteur2D pacmanPos) {
      this->position = (this->position + this->velocity);
 }
 
+/**
+ * Définis la nouvelle position de pacman pour un fantôme.
+ */
 void Fantome::update(Vecteur2D pacmanPos){
-    //Serial.println(millis());
     if(millis() < currentTimeForMovement + timeBeforeMovement) {
         Serial.println(millis());
         return;
@@ -159,7 +174,6 @@ void Fantome::update(Vecteur2D pacmanPos){
             break;
     }
     draw(previousPos);
-    
 }
 
 
