@@ -1,3 +1,6 @@
+/**
+ * Regroupement des fonctions relatives aux déplacements des objets.
+ */
 #include "Utility.h"
 #include "map.h"
 
@@ -6,6 +9,11 @@ Vecteur2D getPositionFrom(Vecteur2D position,Direction direction) {
 
     return position + getVecteurFrom(direction) *2;
 }
+
+/**
+ * Affiche la direction choisi en console pour avoir un suivi des inputs en
+ * développement.
+ */
 void printDirection(Direction direction) {
     switch(direction) {
         case HAUT :
@@ -24,6 +32,11 @@ void printDirection(Direction direction) {
             Serial.println("Direction inconnue");
     }
 }
+
+/**
+ * Récupère la valeur du vecteur correspondant à une direction enum.
+ * @param direction L'enum de la direction.
+ */
 Vecteur2D getVecteurFrom(Direction direction) {
      switch (direction) {
         case HAUT:
@@ -38,13 +51,19 @@ Vecteur2D getVecteurFrom(Direction direction) {
             return {0,0};
     }
 }
+
+/**
+ * Evalu les directions se rapprochant le plus de pacman.
+ * @param position Position du fantôme.
+ * @param target Position de pacman.
+ * @param directionPossibles La liste des directions possibles.
+ * @param taille Nombre de direction possible.
+ */
 Direction closestToTarget(Vecteur2D position, Vecteur2D target, Direction directionPossibles[], int taille) {
     Direction bestDirection = HAUT;
     int bestDistance = 999;
     for (int i = 0; i < taille; i++) {
         int dist = getPositionFrom(position,directionPossibles[i]).distance(target);
-        //Serial.println("Direction Numéro :"+i);
-        //Serial.println(dist);
         if (dist < bestDistance) {
             bestDistance = dist;
             bestDirection = directionPossibles[i];
@@ -52,6 +71,14 @@ Direction closestToTarget(Vecteur2D position, Vecteur2D target, Direction direct
     }
     return bestDirection;
 }
+
+/**
+ *  Récupère le nombre de direction possible à partir d'une position et des
+ * murs autour de cette position.
+ * @param position Position à partir de laquelle on veut connaître les
+ *                 directions empreintable.
+ * @param directionPossibles Tableau où on ajoute les directions possibles.
+ */
 int nombreDirectionsPossible(Vecteur2D position,Direction directionPossibles[]) {
     int indexDirection = 0;
     // Haut toujours = 0
@@ -65,27 +92,26 @@ int nombreDirectionsPossible(Vecteur2D position,Direction directionPossibles[]) 
         indexDirection++;
     }
     if (!estMurPresent(getVecteurFrom(GAUCHE),position + (getVecteurFrom(GAUCHE)*2))) {
-        //Serial.println("Gauche intersection");
         directionPossibles[indexDirection] = GAUCHE;
         indexDirection++;
-    } else {
-        //Serial.println("Pas gauche intersection");
     }
 
     // Bas toujours = indexDirection-1
     if (!estMurPresent(getVecteurFrom(BAS),position + (getVecteurFrom(BAS)*2))) {
         directionPossibles[indexDirection] = BAS;
-        //Serial.println("Bas inter");
-        
         indexDirection++;
-    } else {
-        //Serial.println("Pas bas intersection");
     }
 
     return indexDirection;
 
 }
 
+/**
+ * Réinitialise les directions possibles.
+ * @param directions La liste des direction.
+ * @param direction La direction à concervé.
+ * @param tailleDirection Nombre de direction initialement.
+ */
 int removeFromDirection(Direction directions[],Direction direction, int tailleDirection) {
     int nouvelleTaille = 0;
     for (int i = 0; i < tailleDirection; i++) {
@@ -96,6 +122,11 @@ int removeFromDirection(Direction directions[],Direction direction, int tailleDi
     }
     return nouvelleTaille;
 }
+
+/**
+ * Déduis une direction à partir d'une vélocité.
+ * @param velocity La vitesse à partir de laquelle on déduit la direction.
+ */
 Direction directionFromVelocity(Vecteur2D velocity) {
     if (velocity.x == 1 && velocity.y == 0) {
         return HAUT;
@@ -108,17 +139,23 @@ Direction directionFromVelocity(Vecteur2D velocity) {
     }
     return HAUT;
 }
+
+/**
+ * Dessine une bille à une position.
+ * @param pixel la position du pixel représentant la bille à redessiner.
+ */
 int redrawObjetAt(Vecteur2D pixel) {
     int index1 = rechercheBinaireObjets(pixel,objects,getTailleTableauObjets());
-    /*Serial.println("Vecteur2D");
-    Serial.println(pixel.x);
-    Serial.println(pixel.y);
-    Serial.println("Index");
-    Serial.println(index1);*/
     if(index1 != -1) {
         drawObjet(objects[index1]);
     }
 }
+
+/**
+ * Redessine les objets présent sur les trois pixel derrière un fantôme si
+ * nécessaire.
+ * @param pixel1, pixel2, pixel3 Les pixels devant être redessinés.
+ */
 int redrawObjetsAt(Vecteur2D pixel1, Vecteur2D pixel2, Vecteur2D pixel3) {
     redrawObjetAt(pixel1);
     redrawObjetAt(pixel2);

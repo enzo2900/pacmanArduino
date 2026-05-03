@@ -1,6 +1,6 @@
-//
-// Created by enzoc on 24/03/2026.
-//
+/**
+ * Interface de Fantome.cpp
+ */
 
 #ifndef FANTOME_H
 #define FANTOME_H

@@ -1,14 +1,9 @@
 /*!
- * @file testRGBMatrix.ino
- * @brief Run the routine to test the RGB LED Matrix Panel
- * @copyright   Copyright (c) 2010 DFRobot Co.Ltd (http://www.dfrobot.com)
- * @license     The MIT License (MIT)
- * @author [TangJie]](jie.tang@dfrobot.com)
- * @version  V1.0.1
- * @date  2022-03-23
- * @url https://github.com/DFRobot/DFRobot_RGBMatrix
+ * @file pacmanArduino.ino
+ * @brief Jeu de Pacman sur matrice 64x64
+ * @author Cluzel Enzo, Faussurier Mateo
  */
-#include <avr/pgmspace.h>// Hardware-specific library
+#include <avr/pgmspace.h>
 #include "map.h"
 #include "Utility.h"
 #include "Vecteur2D.h"
@@ -16,7 +11,9 @@
 #include "TimerFour.h"
 #include "Direction.h"
 #include "Fantome.h"
+// Nombre de fantomes affichés
 #define NOMBRE_FANTOMES 3
+// id des billes, une bille est représentée par cet id avec 
 #define ID_BILLE 2
 #define ID_POUVOIR 3
 
@@ -43,13 +40,17 @@ void setup() {
   while (Serial2.available()) Serial2.read();
   Timer3.initialize(150000);
   Timer4.initialize(150000);
-  //Timer3.attachInterrupt(pacManMouv,1000000);
   Serial.println(objects[0].position.x);
   
   matrix.begin();
   
   lancerPartie();
 }
+
+/**
+ * Le lancement d'une parti est dinifi par la mise en place des éléments sur
+ * la matrice, puis le lancement des déplacements des fantômes.
+ */
 void lancerPartie() {
   matrix.fillScreen(matrix.Color333(0,0,0));
   delay(1000);
@@ -84,6 +85,9 @@ void lancerPartie() {
   afficherScore(score);
 }
 
+/**
+ * Défini la direction de pacman à gauche.
+ */
 void gauche() {
   if(partiePerdu || partieGagne){
     lancerPartie();
@@ -93,6 +97,9 @@ void gauche() {
   directionMemorise = GAUCHE;
 }
 
+/**
+ * Défini la direction de pacman à droite.
+ */
 void droite() {
     if(partiePerdu || partieGagne){
     lancerPartie();
@@ -102,6 +109,9 @@ void droite() {
   directionMemorise = DROITE;
 }
 
+/**
+ * Défini la direction de pacman en haut.
+ */
 void haut() {
     if(partiePerdu || partieGagne){
     lancerPartie();
@@ -111,6 +121,9 @@ void haut() {
   directionMemorise = HAUT;
 }
 
+/**
+ * Défini la direction de pacman en bas.
+ */
 void bas() {
     if(partiePerdu || partieGagne){
     lancerPartie();
@@ -133,10 +146,7 @@ bool pacmanToucheFantome() {
 
   for(int i = 0 ; i < NOMBRE_FANTOMES ; i ++) {
     Fantome fantome = fantomes[i];
-    //zdelay(500);
     int distance = pacmanPos.distanceRectangulaire(fantome.position);
-    //Serial.println("Distance");
-    //Serial.println(distance);
     // DIstance -3 pour prendre en compte la largeur ou longueur de pacman et du fantome 
     if(distance -3 < 0) {
       return true;
@@ -145,6 +155,9 @@ bool pacmanToucheFantome() {
   return false;
 }
 
+/**
+ * Effectue une recherche sur les 8 pixels extérieurs de pacman pour savoir si un objet s'y trouve.
+ */
 void verifierPacmanToucheObjet() {
   recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x,pacmanPos.y-1},objects,getTailleTableauObjets()));
   recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x-1,pacmanPos.y},objects,getTailleTableauObjets()));
@@ -155,6 +168,10 @@ void verifierPacmanToucheObjet() {
   recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x+1,pacmanPos.y+1},objects,getTailleTableauObjets()));
   recupererObjetPacman( rechercheBinaireObjets({pacmanPos.x-1,pacmanPos.y+1},objects,getTailleTableauObjets()));
 }
+
+/**
+ * Récupère une bille si elle remplit les conditions pour.
+ */
 void recupererObjetPacman(int indexObjet) {
   if(indexObjet != -1) {
     ObjetGrille objet = objects[indexObjet];
@@ -166,6 +183,10 @@ void recupererObjetPacman(int indexObjet) {
     objects[indexObjet] = objet;
   }
 }
+
+/**
+ * Lance le protocole de partie gagnée.
+ */
 void partieGagn() {
   partieGagne = true;
   Timer3.detachInterrupt();
@@ -173,11 +194,14 @@ void partieGagn() {
   drawEcranVictoire();
 }
 
+/**
+ * Récupère une bille.
+ * @param objet La bille récupérée par pacman.
+ */
 void recupererObjet(ObjetGrille objet) {
   switch(objet.id %10) {
     // Bille
-    case ID_BILLE: 
-      //Serial.println("Touche Bille");
+    case ID_BILLE:
       score += 50;
       afficherScore(score);
       nombreBillesARecuperer -=1;
@@ -194,6 +218,10 @@ void recupererObjet(ObjetGrille objet) {
   }
 
 }
+
+/**
+ * Déplace pacman sur la carte.
+ */
 void pacManMouv(){
   if(directionMemorise != NONE && !estMurPresent(pacmanVelocityOptimist,pacmanPos + pacmanVelocityOptimist *2)) {
     pacmanVelocity = pacmanVelocityOptimist;
@@ -213,22 +241,30 @@ void pacManMouv(){
   
   verifierPacmanToucheObjet();
 }
+
+/**
+ * Lance le protocole de partie perdue.
+ */
 void partiePerd() {
   partiePerdu = true;
   Timer3.detachInterrupt();
   Timer4.detachInterrupt();
   drawEcranDefaite();
 }
+
+/**
+ * Lance le protocole lorsque pacman meurt.
+ */
 void pacmanMeurt() {
-  // TODO la partie est perdu ou perd une vie
   partiePerd();
-}  
+}
+
+/**
+ * Récupère les inputs de déplacement de pacman.
+ */
 void inputHandling() {
   if (Serial2.available() > 0) {
     char command = Serial2.read();
-
-    //delay(5);
-    // Serial.println(command);
     switch (command) {
       case 'g' :
         gauche();
@@ -244,21 +280,21 @@ void inputHandling() {
         break;
       default:
         break;
-        //Serial.println(command);
     }
   }
 }
+
+/**
+ * Déplacement continu des fantômes.
+ */
 void fantomeLoop() {
   if(partiePerdu || partieGagne) return;
-  //delay(200);
-  //pacManMouv();
-  //updateFantomes();
   if(pacmanToucheFantome()) {
     pacmanMeurt();
   }
 }
+
 void loop() {
-  
   inputHandling();
   if(partiePerdu || partieGagne) return;
   updateFantomes();

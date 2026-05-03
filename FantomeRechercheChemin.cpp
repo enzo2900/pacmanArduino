@@ -1,17 +1,12 @@
-//
-// Created by enzoc on 26/03/2026.
-//
+/**
+ * On cherche un chemin avec différent algorithme afin d'attraper pacman.
+ */
 
 #include "FantomeRechercheChemin.h"
-
 #include "map.h"
 #include "Vecteur2D.h"
 #include "Utility.h"
-/*struct Chemin {
-    int tailleChemin;
-    Vecteur2D chemin[VISITE_TAILLE_MAX];
 
-};*/
 Vecteur2D cheminFantome[VISITE_TAILLE_MAX];
 Vecteur2D caseVoisins[4] ;
 bool estUnMurA(Vecteur2D position,Direction direction) {
@@ -21,7 +16,11 @@ bool estUnMurA(Vecteur2D position,Direction direction) {
     return estMurPresent(getVecteurFrom(direction).x,getVecteurFrom(direction).y,x,y);
 }
 
-// Récupére les cases voisines à une case donnée
+/**
+ * Récupère l'information concernant les cases autour du fantôme afin d'obtenir
+ * les directions possibles.
+ * @param caseActuelle La case où se situ le fantôme.
+ */
 int caseVoisinDisponible(Vecteur2D caseActuelle) {
     int nombresVoisins = 0;
     if (!estUnMurA(caseActuelle + getVecteurFrom(HAUT) *2,HAUT) ) {
@@ -45,7 +44,13 @@ int caseVoisinDisponible(Vecteur2D caseActuelle) {
     return nombresVoisins;
 }
 
-// Si l'index est supérieur à la taille actuelle -1 est renvoyé
+/**
+ * Supprime un chemin s'il est de longueur supérieur à un trouver.
+ * Si l'index est supérieur à la taille actuelle -1 est renvoyé.
+ * @param tab le tableau de la carte.
+ * @param index le chemin actuel.
+ * @param tailleTab la chemin trouvé.
+ */
 int removeTo(Vecteur2D tab[],int index, int tailleTab) {
     if (index > tailleTab || index < 0) {
         return -1;
@@ -59,6 +64,14 @@ int removeTo(Vecteur2D tab[],int index, int tailleTab) {
     return tailleTab-1;
 
 }
+
+/**
+ * Supprime un chemin s'il est de longueur supérieur à un trouver.
+ * Si l'index est supérieur à la taille actuelle -1 est renvoyé.
+ * @param tab le tableau de la carte.
+ * @param index le chemin actuel.
+ * @param tailleTab la chemin trouvé.
+ */
 int removetToInt(int tab[],int index, int tailleTab) {
    if (index > tailleTab || index < 0) {
         return -1;
@@ -72,7 +85,12 @@ int removetToInt(int tab[],int index, int tailleTab) {
     return tailleTab-1;
 }
 
-// Renvoie l'index de la position la plus proche de la cible
+/**
+ * Renvoie l'index de la position la plus proche de la cible
+ * @param positions les positions possibles.
+ * @param cible position de la cible.
+ * @param taille le nomobre de position possibles.
+ */
 int closestPosition(const Vecteur2D positions[], Vecteur2D cible, int taille) {
     int bestDistance= 999;
     int indexClosest;
@@ -86,8 +104,13 @@ int closestPosition(const Vecteur2D positions[], Vecteur2D cible, int taille) {
     return indexClosest;
 }
 
-// Renvoie true si le vecteur2D à vérifier est présent dans le tableau des positions 
-// Sinon false
+/**
+ * Renvoie true si le vecteur2D à vérifier est présent dans le tableau des
+ * positions, sinon false.
+ * @param positions la liste des positions.
+ * @param toCheck la position à vérifier.
+ * @param taillePositions le nombre de position à vérifier.
+ */
 bool isVisited(const Vecteur2D positions[], Vecteur2D toCheck, int taillePositions) {
     for (int i = 0; i < taillePositions; i++) {
         Vecteur2D pos = positions[i];
@@ -98,7 +121,10 @@ bool isVisited(const Vecteur2D positions[], Vecteur2D toCheck, int taillePositio
     return false;
 }
 
-// Renverse le chemin
+/**
+ * Inverse le chemin.
+ * @param tailleChemin Le chemin à inverser.
+ */
 void renverserChemin(int tailleChemin) {
     int begin = 0;
     int end = tailleChemin-1;
@@ -113,7 +139,11 @@ void renverserChemin(int tailleChemin) {
 
 
 }
-
+/**
+ * Algorithme de recherche de chemin vers pacman.
+ * @param positionFantome La position du fantôme.
+ * @param cible La position de pacman.
+ */
 int recherche(Vecteur2D positionFantome, Vecteur2D cible) {
     int tailleToVisit = 0;
     int tailleVisited = 0;
@@ -135,10 +165,6 @@ int recherche(Vecteur2D positionFantome, Vecteur2D cible) {
         if (toVisit[bestIndex].x == cible.x && toVisit[bestIndex].y == cible.y) {
             break;
         }
-        /*int taille = caseVoisinDisponible(toVisit[0]);
-        tailleToVisit = removeTo(toVisit,0,tailleToVisit);
-        int indexParent = toVisitIndexParents[0];
-        removetToInt(toVisitIndexParents,0,tailleToVisit+1);*/
         int taille = caseVoisinDisponible(toVisit[bestIndex]);
         tailleToVisit = removeTo(toVisit,bestIndex,tailleToVisit);
         int indexParent = toVisitIndexParents[bestIndex];
