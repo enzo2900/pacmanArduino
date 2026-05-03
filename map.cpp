@@ -1,3 +1,8 @@
+/**
+ * Représente toutes les informations statics de la carte. On y retrouve
+ * notamment les murs et les billes.
+ */
+
 #include "map.h"
 
 #define OE 9
@@ -132,14 +137,20 @@ ObjetGrille objects[258] = {
 ,{{61, 24}, 22},{{61, 26}, 22},{{61, 28}, 22},{{61, 30}, 22},{{61, 32}, 22},{{61, 34}, 22}
 ,{{61, 36}, 22},{{61, 38}, 22},{{61, 40}, 22},{{61, 42}, 22},{{61, 44}, 22}};
 
-
+/**
+ * La taile du tableau représentant la carte..
+ */
 int getTailleTableauObjets() {
   return sizeof(objects)/sizeof(*objects);
 }
-//  0 = rien, 1 = Mur, 2 = bille, 3 = pouvoir
-//  0 = rien, 1 = Mur, 2 = bille, 3 = Pouvoir
+
+
 const uint16_t couleurs[] = { matrix.Color333(0, 0, 0), matrix.Color333(0, 3, 0), matrix.Color333(0, 0, 3) };
 const uint16_t pacmanCouleur = matrix.Color333(7, 7, 0);
+
+/**
+ * Nombre de bille sur la carte.
+ */
 int getNombreBilles() {
   int nombreBilles = 0;
   for(auto objetGrille : objects) {
@@ -169,10 +180,21 @@ bool estMurPresent(int directionX,int directionY, int pixelPosX, int pixelPosY) 
   return pixel1 == 1 || pixel2 == 1 || pixel3 == 1;
 }
 
+/**
+ * Vérifier si un mur est présent par rapport à une position et une direction.
+ * @param directionX La direction en x.
+ * @param directionY La direction en y.
+ * @param pos Position sur la carte.
+ */
 bool estMurPresent(int directionX,int directionY, Vecteur2D pos)  {
     return estMurPresent(directionX,directionY, pos.x, pos.y);
 }
 
+/**
+ * Vérifie si un mur est présent par rapport à une direction est une position.
+ * @param direction La direcition de l'entité.
+ * @param pos La position de l'entité sur la carte.
+ */
 bool estMurPresent(Vecteur2D direction, Vecteur2D pos)  {
     return estMurPresent(direction.x,direction.y, pos.x, pos.y);
 }
@@ -194,7 +216,6 @@ void drawPacman(int lastX, int lastY, Vecteur2D newPos) {
 // Dessine une entité (pacman ou fantome) sur la grille
 // Enleve les pixels de la derniere position du fantome
 void drawEntity(Vecteur2D lastPos, Vecteur2D newPos, uint16_t couleur) {
-  //delay(100);
   drawEntity(lastPos.x,lastPos.y, newPos.x, newPos.y,couleur);
 }
 
@@ -221,8 +242,6 @@ void afficherTexteScore() {
   matrix.println("Score :");
 }
 void afficherScore(int score) {
-  //Serial.println("Scores");
-  //Serial.println(score);
   // ENlever l'ancien score
   matrix.fillRect(0,56,24,8,matrix.Color333(0,0,0));
   matrix.setCursor(5,48);
@@ -232,9 +251,6 @@ void afficherScore(int score) {
 
 // Dessine tous les objets encore non récupérés par pacman
 void drawObjets() {
-  
-  //Serial.println(objects[0].position.x);
-  //for(int i = 0 ; i < 258 ; i ++) {
   for(int i = 0 ; i < sizeof(objects)/sizeof(ObjetGrille) ; i ++) {
     drawObjet(objects[i]);
   }
@@ -242,7 +258,6 @@ void drawObjets() {
 // Dessine l'écran de défaite
 void drawEcranDefaite(){
   matrix.fillScreen(matrix.Color333(0,0,0));
-  //matrix.drawRect(10,10,20,20,matrix.Color333(0,0,0));
   matrix.setTextColor(matrix.Color333(7,0,0));
   matrix.setTextSize(1);
   matrix.setCursor(10,10);
@@ -251,7 +266,6 @@ void drawEcranDefaite(){
 }
 void drawEcranVictoire() {
   matrix.fillScreen(matrix.Color333(0,0,0));
-  //matrix.drawRect(10,10,20,20,matrix.Color333(0,0,0));
   matrix.setTextColor(matrix.Color333(7,0,0));
   matrix.setTextSize(1);
   matrix.setCursor(10,10);
@@ -260,9 +274,7 @@ void drawEcranVictoire() {
 }
 // Dessine un objet à sa position avec sa couleur
 void drawObjet(ObjetGrille objetGrille) {
-  //Serial.println(objetGrille.position.x);
   uint8_t couleur = couleurs[objetGrille.id %10];
-  //Serial.println(objetGrille.id%10);
   matrix.drawPixel(objetGrille.position.x,objetGrille.position.y,couleur);
 }
 
